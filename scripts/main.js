@@ -4,6 +4,30 @@ const TILE_SIZE = 32;
 const APP_WIDTH = window.innerWidth;
 const APP_HEIGHT = window.innerHeight;
 
+// seeds and returns the perlin noise generator
+const getPerlinNoise = () => {
+		noise.seed(Math.random());
+		return noise.simplex2;
+};
+
+// Given a ressources paint it repeatedly as a tile on the app
+const paintPerlinNoise = (app, noiseGenerator) => _
+			.range(0, APP_WIDTH, TILE_SIZE)
+			.map(x =>
+					 _.range(0, APP_HEIGHT, TILE_SIZE)
+					 .map(y => {
+							 const tile = noiseGenerator(x / (TILE_SIZE * 100), y / (TILE_SIZE * 100)) < 0
+										 ? 'images/sea.png' : 'images/grass.png';
+							 const sprite = new PIXI.Sprite(PIXI.loader.resources[tile].texture);
+							 sprite.width = TILE_SIZE;
+							 sprite.height = TILE_SIZE;
+
+							 sprite.x = x;
+							 sprite.y = y;
+
+							 app.stage.addChild(sprite);
+					 }));
+
 // Given a ressources paint it repeatedly as a tile on the app
 const paintAllTilesWithTile = (app, tile) => _
 			.range(0, APP_WIDTH, TILE_SIZE)
@@ -34,7 +58,8 @@ function main() {
 							'images/grass.png'])
 				.on('progress', (loader, resource) => console.log(`loading textures ${resource.url} - ${loader.progress} %`))
 				.load(() => {
-						paintAllTilesWithTile(app, 'images/grass.png');
+						// paintAllTilesWithTile(app, 'images/grass.png');
+						paintPerlinNoise(app, getPerlinNoise());
 				});
 
 		document.body.appendChild(app.view);
