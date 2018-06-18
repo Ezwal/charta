@@ -10,33 +10,36 @@ const rl = readline.createInterface({
 
 const basicSkeletton = {
 		"meta": {
-				"images": "/animation-sprite.ba87fc57860cb0d066df841e9cb39c75.png",
-				"size":{ "w":3147, // YOU HAVE TO SETUP THOSE MANUALLY
-								 "h":2899
-							 },
-				"scale":"1" },
+				"images": "images/tileset.png",
+				"size":{
+            "w":3147, // YOU HAVE TO SETUP THOSE MANUALLY
+            "h":2899
+        },
+        "scale":"1"
+    },
 		"frames":{}
 };
 
-const basicSprite = { "frame": {
-		"x":938,
-		"y":1,
-		"w":SPRITE_OFFSET,
-		"h":SPRITE_OFFSET
-},
-											"rotated":false,
-											"trimmed":false,
-											"spriteSourceSize":{
-													"x":0,
-													"y":0,
-													"w":SPRITE_OFFSET,
-													"h":SPRITE_OFFSET
-											},
-											"sourceSize":{
-													"w":1149,
-													"h":926
-											}
-										};
+const basicSprite = {
+    "frame": {
+        "x":0,
+        "y":0,
+        "w":SPRITE_OFFSET,
+        "h":SPRITE_OFFSET
+    },
+    "rotated":false,
+    "trimmed":false,
+    "spriteSourceSize":{
+        "x":0,
+        "y":0,
+        "w":SPRITE_OFFSET,
+        "h":SPRITE_OFFSET
+    },
+    "sourceSize":{
+        "w": SPRITE_OFFSET,
+        "h": SPRITE_OFFSET
+    }
+};
 
 let actualSketletton;
 let spriteNb = 0;
@@ -44,7 +47,7 @@ let spriteNb = 0;
 // if the file at meta.images exists then it will read the Object and then populate basicSketton
 function enterAndRead() {
 		try {
-				actualSketletton = fs.readFileSync(basicSkeletton.meta.images);
+				actualSketletton = JSON.stringify(fs.readFileSync(basicSkeletton.meta.images));
 				spriteNb = actualSketletton.frames ? Object.keys(actualSketletton.frames).length : 0;
 				} catch (e) {
 						console.log(`Warning basic skeletton will be saved at ${basicSkeletton.meta.images}`);
@@ -61,18 +64,19 @@ function writeAndLeave() {
 enterAndRead();
 // assuming that the img is a fixed size for every sprite and all images are contigous
 for(;;) {
-		rl.question('What sprite to add to the tileset (with extention)(quit to stop)?', answer => {
+    const numberOfSpritePerline = actualSketletton.meta.size.w / SPRITE_OFFSET;
+		rl.question('What sprite to add to the tileset (with extention)(quit to stop and write file)?', answer => {
 				if (answer === 'quit') {
 						writeAndLeave();
 				}
 				spriteNb += 1;
-				console.log(`Writing for the ${spriteNb} (top => bottom; left => right`);
+				console.log(`Writing for the ${spriteNb}nth (top => bottom; left => right`);
+
 				const addedSprite = basicSprite;
-				// TODO define the actual values of those parameter like the rectangle mask and all
-				addedSprite.frame.x = 0;
-				addedSprite.frame.y = 0;
+				addedSprite.frame.x = (spriteNb % numberOfSpritePerline) * SPRITE_OFFSET;
+				addedSprite.frame.y = Math.floor(spriteNb / numberOfSpritePerline) * SPRITE_OFFSET;
+
 				actualSketletton[answer] = addedSprite;
-				// TODO somehow show the user the sprite he is actually identifying (maybe bye showing a mask of the actual images to be processed ?
 				rl.close();
 		});
 }
