@@ -1,6 +1,6 @@
 'use strict';
 
-const TILE_SIZE = 32;
+const TILE_SIZE = 16;
 
 const APP_WIDTH = window.innerWidth;
 const APP_HEIGHT = window.innerHeight;
@@ -12,19 +12,6 @@ const getPerlinNoise = () => {
     return noise.simplex2;
 };
 
-// Given coordinates and noiseGenerator return texture sprite tile name for this terrain
-const tileSelector = (x, y, noiseGenerator) => {
-    const noiseCenter = noiseGenerator(x / (TILE_SIZE * CHAOS_FACTOR), y / (TILE_SIZE * CHAOS_FACTOR));
-    if (noiseCenter < 0) {
-        return 'sea';
-    } else if (noiseCenter > 0.8) {
-        return 'mountain_grass';
-    } else if (noiseCenter > 0 && noiseCenter < 0.05) {
-        return 'beach';
-    } else {
-        return 'grass';
-    }
-};
 
 // Given a ressources paint it repeatedly as a tile on the app
 const paintPerlinNoise = (app, noiseGenerator) => _
@@ -32,8 +19,8 @@ const paintPerlinNoise = (app, noiseGenerator) => _
       .map(x =>
            _.range(0, APP_HEIGHT, TILE_SIZE)
            .map(y => {
-               const tile = `images/${tileSelector(x, y, noiseGenerator)}.png`;
-               const sprite = new PIXI.Sprite(PIXI.loader.resources[tile].texture);
+               const tile = `${tileSelector(x, y, noiseGenerator)}.png`;
+               const sprite = new PIXI.Sprite(PIXI.TextureCache[tile]);
                sprite.width = TILE_SIZE;
                sprite.height = TILE_SIZE;
 
@@ -68,12 +55,7 @@ function main() {
 
     app.renderer.resize = true;
     PIXI.loader
-        .add(['images/yoshi.jpg',
-              'images/sea.png',
-              'images/mountain.png',
-              'images/mountain_grass.png',
-              'images/beach.png',
-              'images/grass.png'])
+        .add('images/terrain.json')
         .on('progress', (loader, resource) => console.log(`loading textures ${resource.url} - ${loader.progress} %`))
         .load(() => {
             // paintAllTilesWithTile(app, 'images/grass.png');

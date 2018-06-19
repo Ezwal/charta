@@ -10,12 +10,13 @@ const rl = readline.createInterface({
 		output: process.stdout
 });
 
+const tilesetJsonPath = 'images/tileset.json';
 const basicSkeletton = {
 		"meta": {
 				"images": "images/tileset.png",
 				"size":{
-            "w":32 * 10, // YOU HAVE TO SETUP THOSE MANUALLY
-            "h":32 * 10
+            "w": 512,
+            "h": 512
         },
         "scale":"1"
     },
@@ -28,7 +29,7 @@ let spriteNb = 0;
 // if the file at meta.images exists then it will read the Object and then populate basicSketton
 function enterAndRead() {
     try {
-        actualSkeletton = JSON.stringify(fs.readFileSync(basicSkeletton.meta.images));
+        actualSkeletton = JSON.stringify(fs.readFileSync(tilesetJsonPath));
         spriteNb = actualSkeletton.frames ? Object.keys(actualSkeletton.frames).length : 0;
     } catch (e) {
         console.log(`Warning basic skeletton will be saved at ${basicSkeletton.meta.images}`);
@@ -38,7 +39,7 @@ function enterAndRead() {
 
 // at the end of the edition round we just overwrite the whole Object to the tileset name writte in meta.images
 function writeSkeletton() {
-		fs.writeFileSync(actualSkeletton.meta.images, JSON.stringify(actualSkeletton));
+		fs.writeFileSync(tilesetJsonPath, JSON.stringify(actualSkeletton));
 }
 
 enterAndRead();
@@ -56,7 +57,7 @@ async function loop() {
 
             actualSkeletton[answer] = {
                 frame: {
-                    x: (spriteNb % numberOfSpritePerline) * SPRITE_OFFSET,
+                    x: ((spriteNb - 1) % numberOfSpritePerline) * SPRITE_OFFSET,
                     y: Math.floor(spriteNb / numberOfSpritePerline) * SPRITE_OFFSET,
                     w: SPRITE_OFFSET,
                     h: SPRITE_OFFSET
