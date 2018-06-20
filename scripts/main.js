@@ -6,13 +6,6 @@ const APP_WIDTH = window.innerWidth;
 const APP_HEIGHT = window.innerHeight;
 const CHAOS_FACTOR = 25;
 
-// seeds and returns the perlin noise generator
-const getPerlinNoise = () => {
-    noise.seed(Math.random());
-    return noise.simplex2;
-};
-
-
 // Given a ressources paint it repeatedly as a tile on the app
 const paintPerlinNoise = (app, noiseGenerator) => _
       .range(0, APP_WIDTH, TILE_SIZE)
@@ -39,7 +32,6 @@ const paintAllTilesWithTile = (app, tile) => _
                let sprite = new PIXI.Sprite(PIXI.loader.resources[tile].texture);
                sprite.width = TILE_SIZE;
                sprite.height = TILE_SIZE;
-               // console.log(`printing this texture to x:${x} y:${y}`);
 
                sprite.x = x;
                sprite.y = y;
@@ -58,8 +50,10 @@ function main() {
         .add('images/terrain.json')
         .on('progress', (loader, resource) => console.log(`loading textures ${resource.url} - ${loader.progress} %`))
         .load(() => {
-            // paintAllTilesWithTile(app, 'images/grass.png');
-            paintPerlinNoise(app, getPerlinNoise());
+            // TODO generate the terrain and crafy the texture reader so that the generation can be visual yet again
+            // const terrain = R.apply(generateTerrain, [APP_WIDTH, APP_HEIGHT]
+            //                         .map(el => Math.floor(el / TILE_SIZE)));
+            // paintPerlinNoise(app, getPerlinNoise());
         });
 
     document.body.appendChild(app.view);
