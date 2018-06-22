@@ -14,6 +14,7 @@ const paintTerrain = (terrain, w, h) => R.forEach(
     xy => {
         const [x, y] = xy;
         const currentTile = getCoordinates(terrain, x, y);
+        mutateSprite(terrain, x, y);
         const tileType = `${currentTile.type}.png`;
         const sprite = new PIXI.Sprite(PIXI.TextureCache[tileType]);
 

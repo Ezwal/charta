@@ -11,12 +11,31 @@ const typeSelector = () => R
       .cond([
           [el => el < 0 , R.always('sea')],
           [el => el === 0, R.always('cliff_E')],
-          [el => el > 0 && el < 0.05, R.always('sand_E')],
+          [el => el > 0 && el < 0.05, R.always('sand')],
           [el => el > 0.6 && el < 0.8, R.always('hill')],
           [el => el > 0.8, R.always('small_mountain')],
           [R.T, R.always('clear_grass')]
       ]);
 
+// Return information of tile in a square around targeted sprite
+const diamondSelector = (terrain, x, y) => R.zipObj(
+    ['NW', 'N', 'NE', 'W', 'center', 'E', 'SW', 'S', 'SE'],
+    R.map(el => getCoordinates(terrain, x, y),
+        R.xprod(R.range(x-1,x+2), R.range(y-1, y+2))));
+
+//  lookup the diamond sprite and return the sprite to be used for the central one
+const mutateSprite = (terrain, x, y) => {
+    const diamond = diamondSelector(terrain, x, y);
+    debugger;
+    if (diamond.center.type === 'sand') {
+        const filtered = R.filter(
+            el => el.type,
+            R.pick(['N', 'S', 'E', 'W'], diamond));
+    }
+    return diamond.center.type;
+};
+
+// return noise value according to coordinates following chaos values
 const noiseToType = (x, y) => typeSelector()(perlin2d(x / CHAOS_FACTOR , y / CHAOS_FACTOR));
 
 // Given size return a 3D data set representing the terrain
@@ -36,8 +55,6 @@ const generateTerrain = generateTerrainObject;
 const hashKey = (x, y) => `${x}-${y}`;
 
 const getCoordinates = (terrain, x, y) => terrain.get(hashKey(x, y));
-
-// alias for confort
 
 // perf-wize array do very well (5s less and way less memory hoggin I guess) netherless its a mess to navigate so I'll stick
 // with Object for the time being
