@@ -1,6 +1,5 @@
 'use strict';
 
-// noise
 noise.seed(Math.random());
 
 const perlin2d =  noise.simplex2;
@@ -25,22 +24,12 @@ const diamondSelector = (terrain, x, y) => R.zipObj(
           getCoordinates(terrain, x, y)
     , R.xprod(R.range(x-1,x+2), R.range(y-1, y+2))));
 
-//  lookup the diamond sprite and return the sprite to be used for the central one
-const mutateSprite = (terrain, x, y) => {
-    const diamond = diamondSelector(terrain, x, y);
-    if (diamond.center.type === 'sand') {
-        const filtered = R.filter(
-            el => el && el.type === 'clear_grass',
-            R.pick(['N', 'S', 'E', 'W'], diamond));
-        return `${diamond.center.type}_${R.keysIn(filtered).join('')}`;
-    }
-    return diamond.center.type;
-};
 
 // return noise value according to coordinates following chaos values
 const noiseToType = (x, y) => typeSelector()(perlin2d(x / CHAOS_FACTOR , y / CHAOS_FACTOR));
 
 // Given size return a 3D data set representing the terrain
+// TODO add layer of generation using already generated data sets
 const generateTerrainArray = (w, h) => R.map(
     ([x, y]) => ({x, y, type: noiseToType(x, y)}),
     R.xprod(R.range(0, w), R.range(0, h)));
