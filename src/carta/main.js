@@ -11,8 +11,7 @@ let app;
 // given an object descrybing the terrain and the width and height to be drawn,
 // will range accross it and paint them on screen according to typeSelector
 const paintTerrain = (terrain, w, h) => R.forEach(
-    xy => {
-        const [x, y] = xy;
+    ([x, y]) => {
         const tileType = `${mutateSprite(terrain, x, y)}.png`;
         const sprite = new PIXI.Sprite(PIXI.TextureCache[tileType]);
 

@@ -10,7 +10,7 @@ const typeSelector = () => R
       .cond([
           // [el => el < 0 , R.always('deep_sea')],
           [el => el < 0 , R.always('sea')],
-          [el => el === 0, R.always('cliff_E')],
+          [el => el === 0, R.always('cliff-E')],
           [el => el > 0 && el < 0.05, R.always('sand')],
           [el => el > 0.6 && el < 0.8, R.always('hill')],
           [el => el > 0.8, R.always('small_mountain')],

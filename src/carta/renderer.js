@@ -2,19 +2,26 @@
 
 const isCenterType = type => diamond => R.equals(diamond.center.type, type);
 
-const beachRendering = (diamond, type) => {
+const beachRendering = diamond => {
     const filtered = R.filter(
         el => el && el.type === 'clear_grass',
         R.pick(['N', 'S', 'E', 'W'], diamond));
-    console.log(diamond);
-    return `${diamond.center.type}_${R.keysIn(filtered).join('')}`;
+    return `sand-${R.keysIn(filtered).join('')}`;
+};
+
+const grassRendering = diamond => {
+    const filtered = R.filter(
+        el => el && el.type === 'sand',
+        R.pick(['N', 'S', 'E', 'W'], diamond));
+
+    return R.keysIn(filtered).length !== 0  ?
+        `clear_grass_sand-${R.keysIn(filtered).join('')}` : 'clear_grass';
 };
 
 //  lookup the diamond sprite and return the sprite to be used for the central one
-const mutateSprite = (terrain, x, y) => {
-    const diamond = diamondSelector(terrain, x, y);
-    return R.cond([
-        [isCenterType('sand'), beachRendering],
-        [R.T, R.always(diamond.center.type)]
-    ])(diamond);
-};
+const mutateSprite = (terrain, x, y) => R
+      .cond([
+          [isCenterType('sand'), beachRendering],
+          [isCenterType('clear_grass'), grassRendering],
+          [R.T, () => diamondSelector(terrain, x, y).center.type]
+    ])(diamondSelector(terrain, x, y));

@@ -13,7 +13,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"river_SE.png":
+		"river-NE.png":
 		{
 			"frame": {"x":0,"y":0,"w":16,"h":16},
 			"rotated": false,
@@ -21,7 +21,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff_E.png":
+		"clear_grass_sand-NW.png":
 		{
 			"frame": {"x":0,"y":16,"w":16,"h":16},
 			"rotated": false,
@@ -29,7 +29,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff_NE.png":
+		"clear_grass_sand-SE.png":
 		{
 			"frame": {"x":16,"y":16,"w":16,"h":16},
 			"rotated": false,
@@ -37,7 +37,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff_N.png":
+		"clear_grass_sand-SW.png":
 		{
 			"frame": {"x":32,"y":0,"w":16,"h":16},
 			"rotated": false,
@@ -45,7 +45,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff_NW.png":
+		"clear_grass.png":
 		{
 			"frame": {"x":32,"y":16,"w":16,"h":16},
 			"rotated": false,
@@ -53,7 +53,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff_SE.png":
+		"cliff-E.png":
 		{
 			"frame": {"x":0,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -61,7 +61,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sea.png":
+		"cliff-NE.png":
 		{
 			"frame": {"x":16,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -69,7 +69,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff_SW.png":
+		"cliff-N.png":
 		{
 			"frame": {"x":32,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -77,7 +77,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff_W.png":
+		"cliff-NW.png":
 		{
 			"frame": {"x":48,"y":0,"w":16,"h":16},
 			"rotated": false,
@@ -85,7 +85,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"forest.png":
+		"cliff-SE.png":
 		{
 			"frame": {"x":48,"y":16,"w":16,"h":16},
 			"rotated": false,
@@ -93,7 +93,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"hill.png":
+		"sea.png":
 		{
 			"frame": {"x":48,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -101,7 +101,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"middle_grass.png":
+		"cliff-SW.png":
 		{
 			"frame": {"x":0,"y":48,"w":16,"h":16},
 			"rotated": false,
@@ -109,7 +109,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"river_NE.png":
+		"cliff-W.png":
 		{
 			"frame": {"x":16,"y":48,"w":16,"h":16},
 			"rotated": false,
@@ -117,7 +117,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"river_NW.png":
+		"forest.png":
 		{
 			"frame": {"x":32,"y":48,"w":16,"h":16},
 			"rotated": false,
@@ -125,15 +125,15 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff_S.png":
+		"hill.png":
 		{
-			"frame": {"x":0,"y":80,"w":16,"h":14},
+			"frame": {"x":48,"y":48,"w":16,"h":16},
 			"rotated": false,
 			"trimmed": false,
-			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":14},
-			"sourceSize": {"w":16,"h":14}
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
 		},
-		"river_SN.png":
+		"middle_grass.png":
 		{
 			"frame": {"x":64,"y":0,"w":16,"h":16},
 			"rotated": false,
@@ -141,15 +141,15 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"river_SW.png":
+		"cliff-S.png":
 		{
-			"frame": {"x":64,"y":16,"w":16,"h":16},
+			"frame": {"x":64,"y":80,"w":16,"h":14},
 			"rotated": false,
 			"trimmed": false,
-			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
-			"sourceSize": {"w":16,"h":16}
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":14},
+			"sourceSize": {"w":16,"h":14}
 		},
-		"river_WE.png":
+		"river-NW.png":
 		{
 			"frame": {"x":64,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -157,7 +157,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_E.png":
+		"river-SE.png":
 		{
 			"frame": {"x":64,"y":48,"w":16,"h":16},
 			"rotated": false,
@@ -165,7 +165,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_NE.png":
+		"river-SN.png":
 		{
 			"frame": {"x":0,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -173,7 +173,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_N.png":
+		"river-SW.png":
 		{
 			"frame": {"x":16,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -181,7 +181,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_NW.png":
+		"river-WE.png":
 		{
 			"frame": {"x":32,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -189,7 +189,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_SE.png":
+		"sand-E.png":
 		{
 			"frame": {"x":48,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -197,7 +197,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_S.png":
+		"sand-NE.png":
 		{
 			"frame": {"x":64,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -205,7 +205,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_SW.png":
+		"sand-N.png":
 		{
 			"frame": {"x":80,"y":0,"w":16,"h":16},
 			"rotated": false,
@@ -213,7 +213,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_W.png":
+		"sand-NW.png":
 		{
 			"frame": {"x":80,"y":16,"w":16,"h":16},
 			"rotated": false,
@@ -221,7 +221,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sea_A.png":
+		"sand-SE.png":
 		{
 			"frame": {"x":80,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -229,7 +229,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sea_B.png":
+		"sand-S.png":
 		{
 			"frame": {"x":80,"y":48,"w":16,"h":16},
 			"rotated": false,
@@ -237,7 +237,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"small_mountain.png":
+		"sand-SW.png":
 		{
 			"frame": {"x":80,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -245,9 +245,41 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"clear_grass.png":
+		"sand-W.png":
 		{
-			"frame": {"x":48,"y":48,"w":16,"h":16},
+			"frame": {"x":0,"y":80,"w":16,"h":16},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
+		},
+		"sea_A.png":
+		{
+			"frame": {"x":16,"y":80,"w":16,"h":16},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
+		},
+		"sea_B.png":
+		{
+			"frame": {"x":32,"y":80,"w":16,"h":16},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
+		},
+		"small_mountain.png":
+		{
+			"frame": {"x":48,"y":80,"w":16,"h":16},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
+		},
+		"clear_grass_sand-NE.png":
+		{
+			"frame": {"x":64,"y":16,"w":16,"h":16},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
