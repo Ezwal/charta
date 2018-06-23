@@ -13,9 +13,7 @@ let app;
 const paintTerrain = (terrain, w, h) => R.forEach(
     xy => {
         const [x, y] = xy;
-        const currentTile = getCoordinates(terrain, x, y);
-        mutateSprite(terrain, x, y);
-        const tileType = `${currentTile.type}.png`;
+        const tileType = `${mutateSprite(terrain, x, y)}.png`;
         const sprite = new PIXI.Sprite(PIXI.TextureCache[tileType]);
 
         sprite.width = TILE_SIZE;

@@ -1,9 +1,9 @@
 'use strict';
 
+// noise
 noise.seed(Math.random());
 
 const perlin2d =  noise.simplex2;
-
 const CHAOS_FACTOR = 25;
 
 // Given coordinates and noiseGenerator return texture sprite tile name for this terrain
@@ -17,20 +17,22 @@ const typeSelector = () => R
           [R.T, R.always('clear_grass')]
       ]);
 
+
 // Return information of tile in a square around targeted sprite
 const diamondSelector = (terrain, x, y) => R.zipObj(
-    ['NW', 'N', 'NE', 'W', 'center', 'E', 'SW', 'S', 'SE'],
-    R.map(el => getCoordinates(terrain, x, y),
-        R.xprod(R.range(x-1,x+2), R.range(y-1, y+2))));
+    ['NW', 'W', 'SW', 'N', 'center', 'S', 'NE', 'E', 'SE'],
+    R.map(([x, y]) =>
+          getCoordinates(terrain, x, y)
+    , R.xprod(R.range(x-1,x+2), R.range(y-1, y+2))));
 
 //  lookup the diamond sprite and return the sprite to be used for the central one
 const mutateSprite = (terrain, x, y) => {
     const diamond = diamondSelector(terrain, x, y);
-    debugger;
     if (diamond.center.type === 'sand') {
         const filtered = R.filter(
-            el => el.type,
+            el => el && el.type === 'clear_grass',
             R.pick(['N', 'S', 'E', 'W'], diamond));
+        return `${diamond.center.type}_${R.keysIn(filtered).join('')}`;
     }
     return diamond.center.type;
 };
@@ -40,14 +42,13 @@ const noiseToType = (x, y) => typeSelector()(perlin2d(x / CHAOS_FACTOR , y / CHA
 
 // Given size return a 3D data set representing the terrain
 const generateTerrainArray = (w, h) => R.map(
-    el => ({x: el[0], y: el[1], type: noiseToType(el[0], el[1])}),
+    ([x, y]) => ({x, y, type: noiseToType(x, y)}),
     R.xprod(R.range(0, w), R.range(0, h)));
 
 const generateTerrainObject = (w, h) => R.reduce(
-    (acc, el) => {
-        const [x, y] = el;
-        return acc.set(hashKey(x, y), {type: noiseToType(x, y)});
-    }, new Map(),
+    (acc, [x, y]) =>
+        acc.set(hashKey(x, y), {type: noiseToType(x, y)})
+    , new Map(),
     R.xprod(R.range(0, w), R.range(0, h)));
 
 const generateTerrain = generateTerrainObject;

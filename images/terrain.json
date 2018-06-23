@@ -1,7 +1,7 @@
 {
 	"meta": {
 		"image": "terrain.png",
-		"size": {"w":80,"h":80},
+		"size": {"w":96,"h":96},
 		"scale": "1"
 	},
 	"frames": {
@@ -13,7 +13,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"middle_grass.png":
+		"river_NW.png":
 		{
 			"frame": {"x":0,"y":0,"w":16,"h":16},
 			"rotated": false,
@@ -101,13 +101,13 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff_S.png":
+		"middle_grass.png":
 		{
-			"frame": {"x":64,"y":64,"w":16,"h":14},
+			"frame": {"x":0,"y":48,"w":16,"h":16},
 			"rotated": false,
 			"trimmed": false,
-			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":14},
-			"sourceSize": {"w":16,"h":14}
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
 		},
 		"river_NE.png":
 		{
@@ -117,13 +117,13 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"river_NW.png":
+		"cliff_S.png":
 		{
-			"frame": {"x":32,"y":48,"w":16,"h":16},
+			"frame": {"x":80,"y":48,"w":16,"h":14},
 			"rotated": false,
 			"trimmed": false,
-			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
-			"sourceSize": {"w":16,"h":16}
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":14},
+			"sourceSize": {"w":16,"h":14}
 		},
 		"river_SE.png":
 		{
@@ -165,7 +165,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_N.png":
+		"sand_NE.png":
 		{
 			"frame": {"x":0,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -173,7 +173,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_S.png":
+		"sand_N.png":
 		{
 			"frame": {"x":16,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -181,7 +181,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sand_W.png":
+		"sand_NW.png":
 		{
 			"frame": {"x":32,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -189,7 +189,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"small_mountain.png":
+		"sand_SE.png":
 		{
 			"frame": {"x":48,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -197,9 +197,41 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
+		"sand_S.png":
+		{
+			"frame": {"x":64,"y":64,"w":16,"h":16},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
+		},
+		"sand_SW.png":
+		{
+			"frame": {"x":80,"y":0,"w":16,"h":16},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
+		},
+		"sand_W.png":
+		{
+			"frame": {"x":80,"y":16,"w":16,"h":16},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
+		},
+		"small_mountain.png":
+		{
+			"frame": {"x":80,"y":32,"w":16,"h":16},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
+		},
 		"clear_grass.png":
 		{
-			"frame": {"x":0,"y":48,"w":16,"h":16},
+			"frame": {"x":32,"y":48,"w":16,"h":16},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
