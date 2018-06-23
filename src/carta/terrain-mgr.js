@@ -8,6 +8,7 @@ const CHAOS_FACTOR = 25;
 // Given coordinates and noiseGenerator return texture sprite tile name for this terrain
 const typeSelector = () => R
       .cond([
+          // [el => el < 0 , R.always('deep_sea')],
           [el => el < 0 , R.always('sea')],
           [el => el === 0, R.always('cliff_E')],
           [el => el > 0 && el < 0.05, R.always('sand')],
