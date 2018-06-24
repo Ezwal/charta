@@ -5,6 +5,26 @@ noise.seed(Math.random());
 const perlin2d =  noise.simplex2;
 const CHAOS_FACTOR = 25;
 
+
+//////////////////////
+// HELPER FUNCTIONS //
+//////////////////////
+
+// return noise value according to coordinates following chaos values
+const noiseToType = (x, y) => typeSelector()(perlin2d(x / CHAOS_FACTOR , y / CHAOS_FACTOR));
+const hashKey = (x, y) => `${x}-${y}`;
+const getCoordinates = terrain => (x, y) => terrain.get(hashKey(x, y));
+
+// gives 2d array of all combination of coordnates
+const getSpaceArray = ([wi, wf], [hi, hf]) => R.xprod(R.range(wi, wf), R.range(hi, hf));
+
+// Return information of tile in a square around targeted sprite
+const diamondSelector = (terrain, x, y) => R.zipObj(
+    ['NW', 'W', 'SW', 'N', 'center', 'S', 'NE', 'E', 'SE'],
+    R.map(([x, y]) =>
+          getCoordinates(terrain)(x, y)
+          , getSpaceArray([x-1, x+2], [y-1, y+2])));
+
 // Given coordinates and noiseGenerator return texture sprite tile name for this terrain
 const typeSelector = () => R
       .cond([
@@ -17,39 +37,16 @@ const typeSelector = () => R
           [R.T, R.always('clear_grass')]
       ]);
 
-
-// Return information of tile in a square around targeted sprite
-const diamondSelector = (terrain, x, y) => R.zipObj(
-    ['NW', 'W', 'SW', 'N', 'center', 'S', 'NE', 'E', 'SE'],
-    R.map(([x, y]) =>
-          getCoordinates(terrain)(x, y)
-    , R.xprod(R.range(x-1,x+2), R.range(y-1, y+2))));
-
-// return noise value according to coordinates following chaos values
-const noiseToType = (x, y) => typeSelector()(perlin2d(x / CHAOS_FACTOR , y / CHAOS_FACTOR));
+// can't map over Map (lol) should mamp over keys instead
+const populateTerrainObject = terrain => (w, h) => R.map(
+    ([x, y]) => mutateTile(terrain)(x, y),
+    getSpaceArray([0, w], [0, h]));
 
 // Given size return a 3D data set representing the terrain
-// TODO add layer of generation using already generated data sets
-const generateTerrainArray = (w, h) => R.map(
-    ([x, y]) => ({x, y, type: noiseToType(x, y)}),
-    R.xprod(R.range(0, w), R.range(0, h)));
-
 const generateTerrainObject = (w, h) => R.reduce(
     (acc, [x, y]) =>
         acc.set(hashKey(x, y), {type: noiseToType(x, y)})
     , new Map(),
-    R.xprod(R.range(0, w), R.range(0, h)));
+    getSpaceArray([0, w], [0, h]));
 
 const generateTerrain = generateTerrainObject;
-
-const hashKey = (x, y) => `${x}-${y}`;
-
-const getCoordinates = terrain => (x, y) => terrain.get(hashKey(x, y));
-
-// perf-wize array do very well (5s less and way less memory hoggin I guess) netherless its a mess to navigate so I'll stick
-// with Object for the time being
-const time = cb => {
-    const start = Date.now();
-    cb(1920, 1080);
-    return Date.now() - start;
-};

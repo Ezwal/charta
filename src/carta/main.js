@@ -14,6 +14,7 @@ const [NB_X_TILE, NB_Y_TILE] = [APP_WIDTH, APP_HEIGHT].map(normalizeCoordinates)
 // will range accross it and paint them on screen according to typeSelector
 const paintTerrain = (mutate, w, h) => R.forEach(
     ([x, y]) => {
+        // switch back  to getCoordinates and use mutate for the population
         const tileType = `${mutate(x, y)}.png`;
         const sprite = new PIXI.Sprite(PIXI.TextureCache[tileType]);
 
