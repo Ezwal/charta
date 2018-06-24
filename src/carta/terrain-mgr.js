@@ -22,9 +22,8 @@ const typeSelector = () => R
 const diamondSelector = (terrain, x, y) => R.zipObj(
     ['NW', 'W', 'SW', 'N', 'center', 'S', 'NE', 'E', 'SE'],
     R.map(([x, y]) =>
-          getCoordinates(terrain, x, y)
+          getCoordinates(terrain)(x, y)
     , R.xprod(R.range(x-1,x+2), R.range(y-1, y+2))));
-
 
 // return noise value according to coordinates following chaos values
 const noiseToType = (x, y) => typeSelector()(perlin2d(x / CHAOS_FACTOR , y / CHAOS_FACTOR));
@@ -45,7 +44,7 @@ const generateTerrain = generateTerrainObject;
 
 const hashKey = (x, y) => `${x}-${y}`;
 
-const getCoordinates = (terrain, x, y) => terrain.get(hashKey(x, y));
+const getCoordinates = terrain => (x, y) => terrain.get(hashKey(x, y));
 
 // perf-wize array do very well (5s less and way less memory hoggin I guess) netherless its a mess to navigate so I'll stick
 // with Object for the time being
