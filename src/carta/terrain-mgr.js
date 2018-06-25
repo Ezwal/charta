@@ -14,12 +14,13 @@ const CHAOS_FACTOR = 25;
 const noiseToType = (x, y) => typeSelector()(perlin2d(x / CHAOS_FACTOR , y / CHAOS_FACTOR));
 const hashKey = (x, y) => `${x}-${y}`;
 const getCoordinates = terrain => (x, y) => terrain.get(hashKey(x, y));
+const setCoordinates = terrain => (x, y) => newValue => terrain.set(hashKey(x, y), newValue);
 
 // gives 2d array of all combination of coordnates
 const getSpaceArray = ([wi, wf], [hi, hf]) => R.xprod(R.range(wi, wf), R.range(hi, hf));
 
 // Return information of tile in a square around targeted sprite
-const diamondSelector = (terrain, x, y) => R.zipObj(
+const diamondSelector = terrain => (x, y) => R.zipObj(
     ['NW', 'W', 'SW', 'N', 'center', 'S', 'NE', 'E', 'SE'],
     R.map(([x, y]) =>
           getCoordinates(terrain)(x, y)
@@ -38,8 +39,8 @@ const typeSelector = () => R
       ]);
 
 // can't map over Map (lol) should mamp over keys instead
-const populateTerrainObject = terrain => (w, h) => R.map(
-    ([x, y]) => mutateTile(terrain)(x, y),
+const populateTerrainObject = terrain => (w, h) => R.forEach(
+    ([x, y]) => setCoordinates(terrain)(x, y)(mutateTile(terrain)(x, y)),
     getSpaceArray([0, w], [0, h]));
 
 // Given size return a 3D data set representing the terrain

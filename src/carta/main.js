@@ -1,6 +1,7 @@
 'use strict';
 
 let app;
+let terrain;
 
 const TILE_SIZE = 16;
 const APP_WIDTH = window.innerWidth;
@@ -12,10 +13,10 @@ const [NB_X_TILE, NB_Y_TILE] = [APP_WIDTH, APP_HEIGHT].map(normalizeCoordinates)
 
 // given an object descrybing the terrain and the width and height to be drawn,
 // will range accross it and paint them on screen according to typeSelector
-const paintTerrain = (mutate, w, h) => R.forEach(
+const paintTerrain = getCoords => (w, h) => R.forEach(
     ([x, y]) => {
-        // switch back  to getCoordinates and use mutate for the population
-        const tileType = `${mutate(x, y)}.png`;
+        const currentTile = getCoords(x, y);
+        const tileType = typeof currentTile === 'object' ? currentTile.sprite : `${currentTile}.png`;
         const sprite = new PIXI.Sprite(PIXI.TextureCache[tileType]);
 
         sprite.width = TILE_SIZE;
@@ -32,7 +33,7 @@ const mouseHandling = terrain => {
     const getCoords = getCoordinates(terrain);
 
     app.ticker.add(() => {
-        console.log(getCoords(...[mouseposition.x, mouseposition.y]
+        console.log(`x: ${mouseposition.x}, y: ${mouseposition.y}`, getCoords(...[mouseposition.x, mouseposition.y]
                               .map(normalizeCoordinates)));
     });
 };
@@ -50,8 +51,10 @@ function main() {
         .add('images/terrain.json')
         .on('progress', (loader, resource) => console.log(`loading textures ${resource.url} - ${loader.progress} %`))
         .load(() => {
-            const terrain = generateTerrainObject(NB_X_TILE, NB_Y_TILE);
-            paintTerrain(mutateSprite(terrain), NB_X_TILE, NB_Y_TILE);
+            // factor the always the same params
+            terrain = generateTerrainObject(NB_X_TILE, NB_Y_TILE);
+            populateTerrainObject(terrain)(NB_X_TILE, NB_Y_TILE);
+            paintTerrain(getCoordinates(terrain))(NB_X_TILE, NB_Y_TILE);
             mouseHandling(terrain);
         });
 
