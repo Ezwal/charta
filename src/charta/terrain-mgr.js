@@ -18,7 +18,7 @@ const updateCoordinates = terrain => (x, y) => newValues => terrain.set(hashKey(
                                                                           R.merge(newValues, terrain.get(hashKey(x, y))));
 const noiseToType = (x, y) => ({
     type: typeSelector()(perlin2d(x / CHAOS_FACTOR , y / CHAOS_FACTOR)),
-    elevation: perlin2d(x / CHAOS_FACTOR , y / CHAOS_FACTOR)
+    elevation: perlin2d(x / CHAOS_FACTOR, y / CHAOS_FACTOR)
 });
 
 // gives 2d array of all combination of coordnates

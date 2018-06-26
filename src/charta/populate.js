@@ -14,20 +14,16 @@ const beachRendering = diamond => {
 const grassRendering = diamond => {
     const sandAround = typeAround('sand')(diamond);
     const seaAround = typeAround('sea')(diamond);
-    if(R.keysIn(sandAround).length > 1) {
-        return `clear_grass_sand-${R.keysIn(sandAround).join('')}.png`;
-    } else {
-        return 'clear_grass.png';
-    }
+    return R.keysIn(sandAround).length > 1 ?
+        `clear_grass_sand-${R.keysIn(sandAround).join('')}.png`
+        : 'clear_grass.png';
 };
 
 const seaRenderering = diamond => {
     const grassAround = R.keysIn(typeAround('clear_grass')(diamond));
-    if(grassAround.length < 3 && grassAround.length > 0) {
-        return `cliff-${grassAround.join('')}.png`;
-    }
-    return 'sea.png';
-;
+    return grassAround.length < 3 && grassAround.length > 0
+        ? `cliff-${grassAround.join('')}.png`
+        : 'sea.png';
 };
 
 // fulfill contract by returning object every single times in order to have a consistent API and remove ugly type
