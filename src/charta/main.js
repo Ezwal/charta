@@ -16,7 +16,7 @@ const [NB_X_TILE, NB_Y_TILE] = [APP_WIDTH, APP_HEIGHT].map(normalizeCoordinates)
 const paintTerrain = getCoords => (w, h) => R.forEach(
     ([x, y]) => {
         const currentTile = getCoords(x, y);
-        const tileType = typeof currentTile === 'object' ? currentTile.sprite : `${currentTile}.png`;
+        const tileType = R.is(Object, currentTile) ? currentTile.sprite : `${currentTile}.png`;
         const sprite = new PIXI.Sprite(PIXI.TextureCache[tileType]);
 
         sprite.width = TILE_SIZE;
@@ -30,16 +30,13 @@ const paintTerrain = getCoords => (w, h) => R.forEach(
 
 const mouseHandling = terrain => {
     const mouseposition = app.renderer.plugins.interaction.mouse.global;
-    const getCoords = getCoordinates(terrain);
-
-    app.ticker.add(() => {
-        console.log(`x: ${mouseposition.x}, y: ${mouseposition.y}`, getCoords(...[mouseposition.x, mouseposition.y]
-                              .map(normalizeCoordinates)));
-    });
+    // incorporate this part in the game loop
+    app.ticker.add(() => console.log(`x: ${mouseposition.x}, y: ${mouseposition.y}`,
+                                     getCoordinates(terrain)(...[mouseposition.x, mouseposition.y]
+                              .map(normalizeCoordinates))));
 };
 
 function main() {
-
     app = new PIXI.Application({
         width: APP_WIDTH,
         height: APP_HEIGHT,

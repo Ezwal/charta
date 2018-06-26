@@ -8,34 +8,35 @@ const typeAround = type => diamond => R.filter(
 const beachRendering = diamond => {
     const filtered = typeAround('clear_grass')(diamond);
     const orientation = R.keysIn(filtered).join('');
-    console.log(orientation);
-    return {
-        sprite: `sand-${orientation}.png`
-    };
+    return `sand${orientation.length === 0 ? '' : '-'}${orientation}.png`;
 };
 
 const grassRendering = diamond => {
     const sandAround = typeAround('sand')(diamond);
     const seaAround = typeAround('sea')(diamond);
     if(R.keysIn(sandAround).length > 1) {
-        return {
-            sprite: `clear_grass_sand-${R.keysIn(sandAround).join('')}.png`
-        };
-    } else if (R.keysIn(seaAround).length > 0) {
-        return {
-            sprite: `cliff-${R.keysIn(seaAround).join('')}.png`
-        };
+        return `clear_grass_sand-${R.keysIn(sandAround).join('')}.png`;
     } else {
-        return {
-            sprite: 'clear_grass.png'
-        };
+        return 'clear_grass.png';
     }
 };
 
+const seaRenderering = diamond => {
+    const grassAround = R.keysIn(typeAround('clear_grass')(diamond));
+    if(grassAround.length < 3 && grassAround.length > 0) {
+        return `cliff-${grassAround.join('')}.png`;
+    }
+    return 'sea.png';
+;
+};
+
+// fulfill contract by returning object every single times in order to have a consistent API and remove ugly type
+// branching in population phase
 //  lookup the diamond sprite and return the sprite to be used for the central one
 const mutateTile = terrain => (x, y) => R
       .cond([
           [isCenterType('sand'), beachRendering],
           [isCenterType('clear_grass'), grassRendering],
-          [R.T, () => diamondSelector(terrain)(x, y).center.type]
+          [isCenterType('sea'), seaRenderering],
+          [R.T, () => `${diamondSelector(terrain)(x, y).center.type}.png`]
       ])(diamondSelector(terrain)(x, y));
