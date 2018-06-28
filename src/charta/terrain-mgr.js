@@ -5,17 +5,18 @@ noise.seed(Math.random());
 const perlin2d =  noise.simplex2;
 const CHAOS_FACTOR = 25;
 
+const randomInteger = el => Math.floor(Math.random() * el);
 
 //////////////////////
 // HELPER FUNCTIONS //
 //////////////////////
 
-// return noise value according to coordinates following chaos values
 const hashKey = (x, y) => `${x}-${y}`;
 const getCoordinates = terrain => (x, y) => terrain.get(hashKey(x, y));
+const hasCoordinates = terrain => (x, y) => terrain.has(hashKey(x, y));
 const setCoordinates = terrain => (x, y) => newValue => terrain.set(hashKey(x, y), newValue);
-const updateCoordinates = terrain => (x, y) => newValues => terrain.set(hashKey(x, y),
-                                                                          R.merge(newValues, terrain.get(hashKey(x, y))));
+const updateCoordinates = terrain => (x, y) => newValues => setCoordinates(terrain)(x, y)(R.merge(getCoordinates(terrain)(x, y), newValues));
+
 const noiseToType = (x, y) => ({
     type: typeSelector()(perlin2d(x / CHAOS_FACTOR , y / CHAOS_FACTOR)),
     elevation: perlin2d(x / CHAOS_FACTOR, y / CHAOS_FACTOR)
@@ -31,6 +32,9 @@ const diamondSelector = terrain => (x, y) => R.zipObj(
           getCoordinates(terrain)(x, y)
           , getSpaceArray([x-1, x+2], [y-1, y+2])));
 
+// returns an array of 2 random coordinates allowed by the terrain size
+const randomCoordinates = terrain => () => [NB_X_TILE, NB_Y_TILE].map(randomInteger);
+
 // Given coordinates and noiseGenerator return texture sprite tile name for this terrain
 const typeSelector = () => R
       .cond([
@@ -43,7 +47,6 @@ const typeSelector = () => R
           [R.T, R.always('clear_grass')]
       ]);
 
-// can't map over Map (lol) should mamp over keys instead
 const populateTerrainObject = terrain => (w, h) => R.forEach(
     ([x, y]) => updateCoordinates(terrain)(x, y)({sprite: mutateTile(terrain)(x, y)}),
     getSpaceArray([0, w], [0, h]));

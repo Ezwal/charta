@@ -26,6 +26,31 @@ const seaRenderering = diamond => {
         : 'sea.png';
 };
 
+// given terrain will looks for local maximum and will give it a random change of spawning a river
+const drawRivers = terrain => {
+    return 'TODO';
+};
+
+const propagateForest = terrain => (x, y) => likelihood => R.zip(
+    R.times(Math.random, 8).map(el => el < likelihood),
+    getSpaceArray([x-1, x+2], [y-1, y+2]))
+.map(([propagation, [tx, ty]]) => {
+    if (propagation && getCoordinates(terrain)(tx, ty) && getCoordinates(terrain)(tx, ty).type === 'clear_grass') {
+        updateCoordinates(terrain)(tx, ty)({
+            sprite: 'forest.png',
+            type: 'forest'
+        });
+        propagateForest(terrain)(tx, ty)(likelihood/2);
+    }
+});
+
+// Given a probability 0 < P < 1 will mutate terrain to add forest thicket
+// TODO divide probabilities of forest growing and size of forest probs
+const drawForests = terrain => likelihood => R
+      .times(randomCoordinates(terrain), Math.floor(likelihood * terrain.size * CONF.INDIVIDUAL_FOREST_CHANCE))
+      .filter(([x, y]) => getCoordinates(terrain)(x, y).type === 'clear_grass')
+      .map(([x, y]) => propagateForest(terrain)(x, y)(likelihood));
+
 // fulfill contract by returning object every single times in order to have a consistent API and remove ugly type
 // branching in population phase
 //  lookup the diamond sprite and return the sprite to be used for the central one

@@ -3,12 +3,10 @@
 let app;
 let terrain;
 
-const TILE_SIZE = 16;
 const APP_WIDTH = window.innerWidth;
 const APP_HEIGHT = window.innerHeight;
 
-
-const normalizeCoordinates = el => Math.floor(el /TILE_SIZE);
+const normalizeCoordinates = el => Math.floor(el / CONF.TILE_SIZE);
 const [NB_X_TILE, NB_Y_TILE] = [APP_WIDTH, APP_HEIGHT].map(normalizeCoordinates);
 
 // given an object descrybing the terrain and the width and height to be drawn,
@@ -19,10 +17,10 @@ const paintTerrain = getCoords => (w, h) => R.forEach(
         const tileType = R.is(Object, currentTile) ? currentTile.sprite : `${currentTile}.png`;
         const sprite = new PIXI.Sprite(PIXI.TextureCache[tileType]);
 
-        sprite.width = TILE_SIZE;
-        sprite.height = TILE_SIZE;
-        sprite.x = x * TILE_SIZE;
-        sprite.y = y * TILE_SIZE;
+        sprite.width = CONF.TILE_SIZE;
+        sprite.height = CONF.TILE_SIZE;
+        sprite.x = x * CONF.TILE_SIZE;
+        sprite.y = y * CONF.TILE_SIZE;
 
         app.stage.addChild(sprite);
     },
@@ -30,7 +28,7 @@ const paintTerrain = getCoords => (w, h) => R.forEach(
 
 const mouseHandling = terrain => {
     const mouseposition = app.renderer.plugins.interaction.mouse.global;
-    // incorporate this part in the game loop
+    // TODO incorporate this part in the game loop
     app.ticker.add(() => console.log(`x: ${mouseposition.x}, y: ${mouseposition.y}`,
                                      getCoordinates(terrain)(...[mouseposition.x, mouseposition.y]
                               .map(normalizeCoordinates))));
@@ -51,8 +49,10 @@ function main() {
             // factor the always the same params
             terrain = generateTerrainObject(NB_X_TILE, NB_Y_TILE);
             populateTerrainObject(terrain)(NB_X_TILE, NB_Y_TILE);
+            drawRivers(terrain);
+            drawForests(terrain)(CONF.FOREST_SPAWN_RATE);
             paintTerrain(getCoordinates(terrain))(NB_X_TILE, NB_Y_TILE);
-            mouseHandling(terrain);
+            // mouseHandling(terrain);
         });
 
     document.body.appendChild(app.view);
