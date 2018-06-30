@@ -28,7 +28,7 @@ const paintTerrain = getCoords => (w, h) => R.forEach(
 
 const mouseHandling = terrain => {
     const mouseposition = app.renderer.plugins.interaction.mouse.global;
-    // TODO incorporate this part in the game loop
+    // incorporate this part in the game loop
     app.ticker.add(() => console.log(`x: ${mouseposition.x}, y: ${mouseposition.y}`,
                                      getCoordinates(terrain)(...[mouseposition.x, mouseposition.y]
                               .map(normalizeCoordinates))));
@@ -49,7 +49,6 @@ function main() {
             // factor the always the same params
             terrain = generateTerrainObject(NB_X_TILE, NB_Y_TILE);
             populateTerrainObject(terrain)(NB_X_TILE, NB_Y_TILE);
-            drawRivers(terrain);
             drawForests(terrain)(CONF.FOREST_SPAWN_RATE);
             paintTerrain(getCoordinates(terrain))(NB_X_TILE, NB_Y_TILE);
             // mouseHandling(terrain);

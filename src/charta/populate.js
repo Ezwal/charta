@@ -26,15 +26,57 @@ const seaRenderering = diamond => {
         : 'sea.png';
 };
 
-// given terrain will looks for local maximum and will give it a random change of spawning a river
-const drawRivers = terrain => {
-    return 'TODO';
+const mountainRendering = terrain => diamond => {
+    if (Math.random() < CONF.RIVER_SPAWN_RATE) {
+        console.log('river spawn chance !');
+        console.log(diamond.x, diamond.y);
+        drawRivers(terrain)(diamond.x, diamond.y);
+    }
+    return 'small_mountain.png';
 };
+
+// RIVER
+const sortByInverseElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinates(terrain)(ax, ay) < getCoordinates(terrain)(bx, by));
+// given terrain will looks for local maximum and will give it a random change of spawning a river
+const possibleTrajectory = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+const drawRivers = terrain => (x, y) => {
+    const [tx, ty] = possibleTrajectory[randomInteger(4)];
+    const destination = getCoordinates(terrain)(x+tx, y+ty);
+    console.log(destination);
+    if (destination) {
+        if (destination.type === 'river') {
+            drawRivers(terrain)(x, y);
+        } else if (destination !== 'sea') {
+            updateCoordinates(terrain)(x+tx, y+ty)({
+                sprite: 'river-WE.png',
+                type: 'river'
+            });
+            drawRivers(terrain)(x+tx, y+ty);
+        }
+    }
+};
+
+const drawRiversByHeight = terrain => coords => {
+    const lowestHeightCoords = R.head(R.sort(sortByInverseElevation, coords
+                                             .filter(([x, y]) => getCoordinates(terrain)(x, y))));
+    const lowestHeight = getCoordinates(terrain)(...lowestHeightCoords);
+    console.log('river is at coords', lowestHeightCoords);
+    console.log('current Step elevation', lowestHeight.elevation);
+    if (lowestHeight && lowestHeight.type !== 'river' && lowestHeight.type !== 'sea') {
+        updateCoordinates(terrain)(...lowestHeightCoords)({
+            sprite: 'river-WE.png',
+            type: 'river'
+        });
+        drawRiversByHeight(terrain)(getCardinalArray(...lowestHeightCoords));
+    }
+};
+
+// FOREST
 
 const propagateForest = terrain => (x, y) => likelihood => R.zip(
     R.times(Math.random, 8).map(el => el < likelihood),
     getSpaceArray([x-1, x+2], [y-1, y+2]))
-.map(([propagation, [tx, ty]]) => {
+      .map(([propagation, [tx, ty]]) => {
     if (propagation && getCoordinates(terrain)(tx, ty) && getCoordinates(terrain)(tx, ty).type === 'clear_grass') {
         updateCoordinates(terrain)(tx, ty)({
             sprite: 'forest.png',
@@ -45,7 +87,6 @@ const propagateForest = terrain => (x, y) => likelihood => R.zip(
 });
 
 // Given a probability 0 < P < 1 will mutate terrain to add forest thicket
-// TODO divide probabilities of forest growing and size of forest probs
 const drawForests = terrain => likelihood => R
       .times(randomCoordinates(terrain), Math.floor(likelihood * terrain.size * CONF.INDIVIDUAL_FOREST_CHANCE))
       .filter(([x, y]) => getCoordinates(terrain)(x, y).type === 'clear_grass')
@@ -59,5 +100,9 @@ const mutateTile = terrain => (x, y) => R
           [isCenterType('sand'), beachRendering],
           [isCenterType('clear_grass'), grassRendering],
           [isCenterType('sea'), seaRenderering],
+          [isCenterType('small_mountain'), diamond => mountainRendering(terrain)(diamond)],
           [R.T, () => `${diamondSelector(terrain)(x, y).center.type}.png`]
-      ])(diamondSelector(terrain)(x, y));
+      ])({...diamondSelector(terrain)(x, y),
+          // it is dirty I know I should find a real way to put those coordinates
+          // but since I'm lazy and I dont want to refactor this code again I will not do it right now
+          x, y});
