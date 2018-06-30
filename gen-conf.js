@@ -1,0 +1,5 @@
+const CONF = {
+    TILE_SIZE: 16,
+    INDIVIDUAL_FOREST_CHANCE: 0.2,
+    FOREST_SPAWN_RATE: 0.3
+};
