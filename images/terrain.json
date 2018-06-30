@@ -21,7 +21,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"clear_grass_sand-NW.png":
+		"clear_grass_sand-NE.png":
 		{
 			"frame": {"x":0,"y":16,"w":16,"h":16},
 			"rotated": false,
@@ -29,7 +29,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"clear_grass_sand-SE.png":
+		"clear_grass_sand-NW.png":
 		{
 			"frame": {"x":16,"y":16,"w":16,"h":16},
 			"rotated": false,
@@ -37,7 +37,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"clear_grass_sand-SW.png":
+		"clear_grass_sand-SE.png":
 		{
 			"frame": {"x":32,"y":0,"w":16,"h":16},
 			"rotated": false,
@@ -45,7 +45,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"clear_grass.png":
+		"clear_grass_sand-SW.png":
 		{
 			"frame": {"x":32,"y":16,"w":16,"h":16},
 			"rotated": false,
@@ -53,7 +53,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff-W.png":
+		"cliff-E.png":
 		{
 			"frame": {"x":0,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -61,7 +61,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff-SW.png":
+		"cliff-NE.png":
 		{
 			"frame": {"x":16,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -69,7 +69,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff-S.png":
+		"cliff-N.png":
 		{
 			"frame": {"x":32,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -77,7 +77,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff-SE.png":
+		"cliff-NW.png":
 		{
 			"frame": {"x":48,"y":0,"w":16,"h":16},
 			"rotated": false,
@@ -85,7 +85,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff-NW.png":
+		"cliff-SE.png":
 		{
 			"frame": {"x":48,"y":16,"w":16,"h":16},
 			"rotated": false,
@@ -93,7 +93,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"sea.png":
+		"cliff-S.png":
 		{
 			"frame": {"x":48,"y":32,"w":16,"h":16},
 			"rotated": false,
@@ -101,7 +101,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff-NE.png":
+		"cliff-SW.png":
 		{
 			"frame": {"x":0,"y":48,"w":16,"h":16},
 			"rotated": false,
@@ -109,7 +109,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff-E.png":
+		"cliff-W.png":
 		{
 			"frame": {"x":16,"y":48,"w":16,"h":16},
 			"rotated": false,
@@ -141,13 +141,13 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"cliff-N.png":
+		"small_mountain.png":
 		{
-			"frame": {"x":64,"y":80,"w":16,"h":14},
+			"frame": {"x":64,"y":80,"w":16,"h":16},
 			"rotated": false,
 			"trimmed": false,
-			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":14},
-			"sourceSize": {"w":16,"h":14}
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
 		},
 		"river-NW.png":
 		{
@@ -165,7 +165,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"river-SN.png":
+		"river-S.png":
 		{
 			"frame": {"x":0,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -181,7 +181,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"river-WE.png":
+		"river-W.png":
 		{
 			"frame": {"x":32,"y":64,"w":16,"h":16},
 			"rotated": false,
@@ -269,7 +269,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"small_mountain.png":
+		"sea.png":
 		{
 			"frame": {"x":48,"y":80,"w":16,"h":16},
 			"rotated": false,
@@ -277,7 +277,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"clear_grass_sand-NE.png":
+		"clear_grass.png":
 		{
 			"frame": {"x":64,"y":16,"w":16,"h":16},
 			"rotated": false,

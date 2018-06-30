@@ -38,30 +38,32 @@ const mountainRendering = terrain => diamond => {
 // RIVER
 const sortByInverseElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinates(terrain)(ax, ay) < getCoordinates(terrain)(bx, by));
 // given terrain will looks for local maximum and will give it a random change of spawning a river
-const possibleTrajectory = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+const possibleTrajectory = [[1, 0, 'W'], [0, 1, 'S'], [-1, 0, 'W'], [0, -1, 'S']];
+
 const drawRivers = terrain => (x, y) => {
-    const [tx, ty] = possibleTrajectory[randomInteger(4)];
-    const destination = getCoordinates(terrain)(x+tx, y+ty);
-    console.log(destination);
-    if (destination) {
-        if (destination.type === 'river') {
-            drawRivers(terrain)(x, y);
-        } else if (destination !== 'sea') {
-            updateCoordinates(terrain)(x+tx, y+ty)({
-                sprite: 'river-WE.png',
+    // TODO bends and not using recursion
+    const [tx, ty, or] = possibleTrajectory[randomInteger(4)];
+    const offsets = R.times(n => [tx, ty].map(el => el*n), 10);
+
+    offsets.forEach(([ox, oy]) => {
+        const destination = getCoordinates(terrain)(x+ox, y+oy);
+        if (destination && destination.type !== 'sea' && destination.type !== 'river') {
+            updateCoordinates(terrain)(x+ox, y+oy)({
+                sprite: `river-${or}.png`,
                 type: 'river'
             });
-            drawRivers(terrain)(x+tx, y+ty);
+        } else if (!destination || destination.type === 'sea') {
+            return;
         }
-    }
+    });
+    const [lx, ly] = R.last(offsets);
+    // drawRivers(terrain)(lx, ly);
 };
 
 const drawRiversByHeight = terrain => coords => {
     const lowestHeightCoords = R.head(R.sort(sortByInverseElevation, coords
                                              .filter(([x, y]) => getCoordinates(terrain)(x, y))));
     const lowestHeight = getCoordinates(terrain)(...lowestHeightCoords);
-    console.log('river is at coords', lowestHeightCoords);
-    console.log('current Step elevation', lowestHeight.elevation);
     if (lowestHeight && lowestHeight.type !== 'river' && lowestHeight.type !== 'sea') {
         updateCoordinates(terrain)(...lowestHeightCoords)({
             sprite: 'river-WE.png',
