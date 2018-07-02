@@ -38,25 +38,31 @@ const mountainRendering = terrain => diamond => {
 // RIVER
 const sortByInverseElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinates(terrain)(ax, ay) < getCoordinates(terrain)(bx, by));
 // given terrain will looks for local maximum and will give it a random change of spawning a river
+// ATM there is no such thing as directionality maybe later
 const possibleTrajectory = [[1, 0, 'W'], [0, 1, 'S'], [-1, 0, 'W'], [0, -1, 'S']];
 
 const drawRivers = terrain => (x, y) => {
-    // TODO bends and not using recursion
-    const [tx, ty, or] = possibleTrajectory[randomInteger(4)];
-    const offsets = R.times(n => [tx, ty].map(el => el*n), 10);
+    // TODO fix this shit
+    const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], randomInteger(8));
+    // const [tx, ty, or] = possibleTrajectory[randomInteger(4)];
+    // const offsets = R.times(n => [tx, ty].map(el => el*n), 10);
+    const offsets = R.concat(...R.times(getSegment, 3));
+    console.log(offsets);
 
-    offsets.forEach(([ox, oy]) => {
-        const destination = getCoordinates(terrain)(x+ox, y+oy);
+    offsets.reduce(([ax, ay], [cx, cy, co], currentIndex) => {
+        const updateOffsets = [ax+cx, ay+cy];
+        const destination = getCoordinates(terrain)(...updateOffsets);
         if (destination && destination.type !== 'sea' && destination.type !== 'river') {
-            updateCoordinates(terrain)(x+ox, y+oy)({
-                sprite: `river-${or}.png`,
+            updateCoordinates(terrain)(...updateOffsets)({
+                sprite: `river-${co}.png`,
                 type: 'river'
             });
         } else if (!destination || destination.type === 'sea') {
-            return;
+            // TODO
         }
-    });
-    const [lx, ly] = R.last(offsets);
+        return updateOffsets;
+    }, [x, y]);
+    // const [lx, ly] = R.last(offsets);
     // drawRivers(terrain)(lx, ly);
 };
 
