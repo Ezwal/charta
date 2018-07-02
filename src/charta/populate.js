@@ -40,22 +40,21 @@ const sortByInverseElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinat
 const possibleTrajectory = [[1, 0, 'E'], [0, 1, 'S'], [-1, 0, 'W'], [0, -1, 'N']];
 
 const drawRivers = terrain => (x, y) => {
-    const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], randomInteger(8));
+    const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], 8);
     const offsets = R.concat(...R.times(getSegment, 3));
 
-    console.log(`from ${x} ${y} offsets : `, offsets);
     offsets.reduce(([ax, ay], [cx, cy, co], currentIndex) => {
         const updateOffsets = [ax+cx, ay+cy];
         const destination = getCoordinates(terrain)(...updateOffsets);
         if (destination && destination.type !== 'sea' && destination.type !== 'river') {
-            console.log('coordinates : ', updateOffsets);
-            updateCoordinates(terrain)(...updateOffsets)({
+            console.log('destination : ', destination);
+            setCoordinates(terrain)(...updateOffsets)({
                 sprite: `river-${co}.png`,
                 type: 'river',
                 maker: 'drawRivers'
             });
         } else if (!destination || destination.type === 'sea') {
-            // TODO
+            return [ax, ay];
         }
         return updateOffsets;
     }, [x, y]);

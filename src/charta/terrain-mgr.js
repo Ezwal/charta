@@ -4,6 +4,7 @@ noise.seed(Math.random());
 
 const perlin2d =  noise.simplex2;
 const randomInteger = el => Math.floor(Math.random() * el);
+const randomIntegerBetween = (low, high) => low + randomInteger(high - low + 1);
 
 //////////////////////
 // HELPER FUNCTIONS //
@@ -39,9 +40,9 @@ const randomCoordinates = terrain => () => [NB_X_TILE, NB_Y_TILE].map(randomInte
 // Given coordinates and noiseGenerator return texture sprite tile name for this terrain
 const typeSelector = () => R
       .cond([
-          // [el => el < 0 , R.always('deep_sea')],
+          [el => el < -0.7 , R.always('deep_sea')],
           [el => el < 0 , R.always('sea')],
-          [el => el === 0, R.always('cliff-E')],
+          // [el => el === 0, R.always('cliff-E')],
           [el => el > 0 && el < 0.05, R.always('sand')],
           [el => el > 0.6 && el < 0.8, R.always('hill')],
           [el => el > 0.8, R.always('small_mountain')],
@@ -49,8 +50,10 @@ const typeSelector = () => R
       ]);
 
 const populateTerrainObject = terrain => (w, h) => R.forEach(
-    ([x, y]) => updateCoordinates(terrain)(x, y)({sprite: mutateTile(terrain)(x, y)}),
-    getSpaceArray([0, w], [0, h]));
+    ([x, y]) => {
+        if (!getCoordinates(terrain)(x, y).sprite)
+            updateCoordinates(terrain)(x, y)({sprite: mutateTile(terrain)(x, y)});
+}, getSpaceArray([0, w], [0, h]));
 
 // Given size return a 3D data set representing the terrain
 const generateTerrainObject = (w, h) => R.reduce(

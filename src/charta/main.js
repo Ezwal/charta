@@ -11,9 +11,9 @@ const [NB_X_TILE, NB_Y_TILE] = [APP_WIDTH, APP_HEIGHT].map(normalizeCoordinates)
 
 // given an object descrybing the terrain and the width and height to be drawn,
 // will range accross it and paint them on screen according to typeSelector
-const paintTerrain = getCoords => (w, h) => R.forEach(
+const paintTerrain = terrain => (w, h) => R.forEach(
     ([x, y]) => {
-        const currentTile = getCoords(x, y);
+        const currentTile = getCoordinates(terrain)(x, y);
         const tileType = currentTile.sprite;
         const sprite = new PIXI.Sprite(PIXI.TextureCache[tileType]);
 
@@ -49,7 +49,7 @@ function main() {
             terrain = generateTerrainObject(NB_X_TILE, NB_Y_TILE);
             populateTerrainObject(terrain)(NB_X_TILE, NB_Y_TILE);
             drawForests(terrain)(CONF.FOREST_SPAWN_RATE);
-            paintTerrain(getCoordinates(terrain))(NB_X_TILE, NB_Y_TILE);
+            paintTerrain(terrain)(NB_X_TILE, NB_Y_TILE);
             // mouseHandling(terrain);
         });
 
