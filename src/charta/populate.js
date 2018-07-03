@@ -40,17 +40,25 @@ const sortByInverseElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinat
 const possibleTrajectory = [[1, 0, 'W'], [0, 1, 'S'], [-1, 0, 'E'], [0, -1, 'N']];
 
 const drawRivers = terrain => (x, y) => {
-    const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], randomIntegerBetween(5, 8));
-    const offsets = R.concat(...R.times(getSegment, 3));
+    const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], 10);
+    const offsets = R.concat(...R.times(getSegment, 2));
 
     offsets.reduce(([ax, ay], [cx, cy, co], currentIndex, arr) => {
         const updateOffsets = [ax+cx, ay+cy];
         const destination = getCoordinates(terrain)(...updateOffsets);
-        // TODO make bends tile and also check if sea is near tile of river
         if (destination && destination.type !== 'sea' && destination.type !== 'river') {
             const nextBend = arr[currentIndex+1];
 
-            if (nextBend && nextBend[2] !== co)
+            R.mapObjIndexed((num, key, obj) => {
+                    if (['sea', 'cliff', 'sand'].some(el => el === num.type))
+                        updateCoordinates(terrain)(num.x, num.y)({
+                            sprite: 'river_mouth.png', // TODO import corresponding sprite in order for them to appear
+                            type: 'river'
+                        });
+                },
+                R.pick(['N', 'E', 'W', 'S'], diamondSelector(terrain)(ax+cy, ay+cy)));
+
+            if (nextBend && nextBend[2] !== co) // TODO remove
                 console.log(`river-${nextBend[2]}${co}.png`);
 
             setCoordinates(terrain)(...updateOffsets)({
@@ -109,6 +117,7 @@ const mutateTile = terrain => (x, y) => R
           [isCenterType('clear_grass'), grassRendering],
           [isCenterType('sea'), seaRenderering],
           [isCenterType('small_mountain'), diamond => mountainRendering(terrain)(diamond)],
+          [isCenterType('sea'), R.always('snowy_mountain.png')],
           [R.T, () => `${diamondSelector(terrain)(x, y).center.type}.png`]
       ])({...diamondSelector(terrain)(x, y),
           // it is dirty I know I should find a real way to put those coordinates

@@ -1,7 +1,7 @@
 {
 	"meta": {
 		"image": "terrain.png",
-		"size": {"w":112,"h":96},
+		"size": {"w":112,"h":112},
 		"scale": "1"
 	},
 	"frames": {
@@ -173,9 +173,9 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
 			"sourceSize": {"w":16,"h":16}
 		},
-		"small_mountain.png":
+		"snowy_mountain.png":
 		{
-			"frame": {"x":96,"y":80,"w":16,"h":16},
+			"frame": {"x":0,"y":96,"w":16,"h":16},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
@@ -318,7 +318,7 @@
 			"sourceSize": {"w":16,"h":16}
 		},
 		"sea_B.png":
-		  {
+		{
 			"frame": {"x":96,"y":48,"w":16,"h":16},
 			"rotated": false,
 			"trimmed": false,
@@ -328,6 +328,14 @@
 		"sea.png":
 		{
 			"frame": {"x":96,"y":64,"w":16,"h":16},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+			"sourceSize": {"w":16,"h":16}
+		},
+		"small_mountain.png":
+		{
+			"frame": {"x":96,"y":80,"w":16,"h":16},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
