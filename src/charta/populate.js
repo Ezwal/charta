@@ -37,19 +37,25 @@ const mountainRendering = terrain => diamond => {
 const sortByInverseElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinates(terrain)(ax, ay) < getCoordinates(terrain)(bx, by));
 // given terrain will looks for local maximum and will give it a random change of spawning a river
 // ATM there is no such thing as directionality maybe later
-const possibleTrajectory = [[1, 0, 'E'], [0, 1, 'S'], [-1, 0, 'W'], [0, -1, 'N']];
+const possibleTrajectory = [[1, 0, 'W'], [0, 1, 'S'], [-1, 0, 'E'], [0, -1, 'N']];
 
 const drawRivers = terrain => (x, y) => {
-    const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], 8);
+    const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], randomIntegerBetween(5, 8));
     const offsets = R.concat(...R.times(getSegment, 3));
 
-    offsets.reduce(([ax, ay], [cx, cy, co], currentIndex) => {
+    offsets.reduce(([ax, ay], [cx, cy, co], currentIndex, arr) => {
         const updateOffsets = [ax+cx, ay+cy];
         const destination = getCoordinates(terrain)(...updateOffsets);
+        // TODO make bends tile and also check if sea is near tile of river
         if (destination && destination.type !== 'sea' && destination.type !== 'river') {
-            console.log('destination : ', destination);
+            const nextBend = arr[currentIndex+1];
+
+            if (nextBend && nextBend[2] !== co)
+                console.log(`river-${nextBend[2]}${co}.png`);
+
             setCoordinates(terrain)(...updateOffsets)({
-                sprite: `river-${co}.png`,
+                sprite: !nextBend || nextBend[2] === co ?
+                    `river-${co}.png` : `river-${nextBend[2]}${co}.png`,
                 type: 'river',
                 maker: 'drawRivers'
             });
