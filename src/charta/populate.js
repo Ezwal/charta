@@ -41,7 +41,7 @@ const possibleTrajectory = [[1, 0, 'W'], [0, 1, 'S'], [-1, 0, 'E'], [0, -1, 'N']
 
 const drawRivers = terrain => (x, y) => {
     const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], 10);
-    const offsets = R.concat(...R.times(getSegment, 2));
+    const offsets = R.concat(...R.times(getSegment, 4));
 
     offsets.reduce(([ax, ay], [cx, cy, co], currentIndex, arr) => {
         const updateOffsets = [ax+cx, ay+cy];
@@ -49,14 +49,20 @@ const drawRivers = terrain => (x, y) => {
         if (destination && destination.type !== 'sea' && destination.type !== 'river') {
             const nextBend = arr[currentIndex+1];
 
-            R.mapObjIndexed((num, key, obj) => {
-                    if (['sea', 'cliff', 'sand'].some(el => el === num.type))
-                        updateCoordinates(terrain)(num.x, num.y)({
-                            sprite: 'river_mouth.png', // TODO import corresponding sprite in order for them to appear
-                            type: 'river'
-                        });
+            const riverMouth = R.mapObjIndexed((num, key) => {
+                if (['sea', 'cliff', 'sand'].some(el => el === num.type)) {
+                    updateCoordinates(terrain)(num.x, num.y)({
+                        sprite: `river_mouth-${key}.png`,
+                        type: 'river'
+                    });
+                    return true;
+                }
+                return false;
                 },
-                R.pick(['N', 'E', 'W', 'S'], diamondSelector(terrain)(ax+cy, ay+cy)));
+               R.pick(['N', 'E', 'W', 'S'], diamondSelector(terrain)(ax+cy, ay+cy)));
+
+            if (Object.values(riverMouth).some(R.identity))
+                return [ax, ay];
 
             if (nextBend && nextBend[2] !== co) // TODO remove
                 console.log(`river-${nextBend[2]}${co}.png`);
