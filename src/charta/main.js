@@ -50,7 +50,7 @@ function main() {
             populateTerrainObject(terrain)(NB_X_TILE, NB_Y_TILE);
             drawForests(terrain)(CONF.FOREST_SPAWN_RATE);
             paintTerrain(terrain)(NB_X_TILE, NB_Y_TILE);
-            // mouseHandling(terrain);
+            mouseHandling(terrain);
         });
 
     document.body.appendChild(app.view);

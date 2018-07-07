@@ -41,14 +41,16 @@ const possibleTrajectory = [[1, 0, 'W'], [0, 1, 'S'], [-1, 0, 'E'], [0, -1, 'N']
 
 const drawRivers = terrain => (x, y) => {
     const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], 10);
-    const offsets = R.concat(...R.times(getSegment, 4));
+    const globalTrajectories = R.concat(...R.times(getSegment, 4));
 
-    offsets.reduce(([ax, ay], [cx, cy, co], currentIndex, arr) => {
+    globalTrajectories.reduce(([ax, ay, isDone], [cx, cy, co], currentIndex, arr) => {
         const updateOffsets = [ax+cx, ay+cy];
         const destination = getCoordinates(terrain)(...updateOffsets);
-        if (destination && destination.type !== 'sea' && destination.type !== 'river') {
+        if (!isDone && destination && destination.type !== 'sea' && !destination.type.includes('river')) {
+            console.log(destination.type);
             const nextBend = arr[currentIndex+1];
 
+            // calculating river mouth
             const riverMouth = R.mapObjIndexed((num, key) => {
                 if (['sea', 'cliff', 'sand'].some(el => el === num.type)) {
                     updateCoordinates(terrain)(num.x, num.y)({
@@ -62,19 +64,19 @@ const drawRivers = terrain => (x, y) => {
                R.pick(['N', 'E', 'W', 'S'], diamondSelector(terrain)(ax+cy, ay+cy)));
 
             if (Object.values(riverMouth).some(R.identity))
-                return [ax, ay];
+                return [ax, ay, true];
 
-            if (nextBend && nextBend[2] !== co) // TODO remove
-                console.log(`river-${nextBend[2]}${co}.png`);
+            // CORRECT SPRITE : EN WS ES WN 
+            // INCORRECT SPRITE : NS EW NW WE NE
 
+            // tiling along river flow
             setCoordinates(terrain)(...updateOffsets)({
                 sprite: !nextBend || nextBend[2] === co ?
                     `river-${co}.png` : `river-${nextBend[2]}${co}.png`,
-                type: 'river',
-                maker: 'drawRivers'
+                type: 'river'
             });
         } else if (!destination || destination.type === 'sea') {
-            return [ax, ay];
+            return [ax, ay, true];
         }
         return updateOffsets;
     }, [x, y]);
