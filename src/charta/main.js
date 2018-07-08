@@ -47,8 +47,8 @@ function main() {
         .load(() => {
             // factor the always the same params
             terrain = generateTerrainObject(NB_X_TILE, NB_Y_TILE);
-            populateTerrainObject(terrain)(NB_X_TILE, NB_Y_TILE);
             drawForests(terrain)(CONF.FOREST_SPAWN_RATE);
+            populateTerrainObject(terrain)(NB_X_TILE, NB_Y_TILE);
             paintTerrain(terrain)(NB_X_TILE, NB_Y_TILE);
             mouseHandling(terrain);
         });

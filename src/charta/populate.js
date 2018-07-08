@@ -13,7 +13,6 @@ const beachRendering = diamond => {
 
 const grassRendering = diamond => {
     const sandAround = typeAround('sand')(diamond);
-    const seaAround = typeAround('sea')(diamond);
     return R.keysIn(sandAround).length > 1 ?
         `clear_grass_sand-${R.keysIn(sandAround).join('')}.png`
         : 'clear_grass.png';
@@ -40,21 +39,21 @@ const sortByInverseElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinat
 const possibleTrajectory = [[1, 0, 'W'], [0, 1, 'S'], [-1, 0, 'E'], [0, -1, 'N']];
 
 const drawRivers = terrain => (x, y) => {
-    const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], 10);
+    const getSegment = () => R.repeat(possibleTrajectory[randomInteger(4)], randomIntegerBetween(8, 14));
     const globalTrajectories = R.concat(...R.times(getSegment, 4));
 
     globalTrajectories.reduce(([ax, ay, isDone], [cx, cy, co], currentIndex, arr) => {
         const updateOffsets = [ax+cx, ay+cy];
         const destination = getCoordinates(terrain)(...updateOffsets);
         if (!isDone && destination && destination.type !== 'sea' && !destination.type.includes('river')) {
-            console.log(destination.type);
             const nextBend = arr[currentIndex+1];
 
             // calculating river mouth
             const riverMouth = R.mapObjIndexed((num, key) => {
+                console.log(num);
                 if (['sea', 'cliff', 'sand'].some(el => el === num.type)) {
-                    updateCoordinates(terrain)(num.x, num.y)({
-                        sprite: `river_mouth-${key}.png`,
+                    updateCoordinates(terrain)(...updateOffsets)({
+                        sprite: `river_mouth-${co}.png`,
                         type: 'river'
                     });
                     return true;
@@ -66,20 +65,53 @@ const drawRivers = terrain => (x, y) => {
             if (Object.values(riverMouth).some(R.identity))
                 return [ax, ay, true];
 
-            // CORRECT SPRITE : EN WS ES WN 
-            // INCORRECT SPRITE : NS EW NW WE NE
-
             // tiling along river flow
-            setCoordinates(terrain)(...updateOffsets)({
+            updateCoordinates(terrain)(...updateOffsets)({
                 sprite: !nextBend || nextBend[2] === co ?
                     `river-${co}.png` : `river-${nextBend[2]}${co}.png`,
                 type: 'river'
             });
-        } else if (!destination || destination.type === 'sea') {
+        } else if (!destination || destination.type === 'sea' || isDone) {
             return [ax, ay, true];
         }
         return updateOffsets;
     }, [x, y]);
+};
+
+const drawRiversSecond = terrain => (xCenter, yCenter) => {
+    const terrainSquare = getSpaceArray([x-10, y+10], [y-10, y+10])
+          .map(([x, y]) => ({x, y, ...getCoordinates()}));
+    const allSeaAround = R.filter(R.propEq('type', 'sea'), terrainSquare);
+    if (allSeaAround.length !== 0) {
+        const seaDestination = allSeaAround[randomInteger(allSeaAround.length)];
+        R.until(R.equals(R.__, [seaDestination.x, seaDestination.y]), ([x, y]) => {
+            const offDest = [seaDestination.x - x, seaDestination.y - y];
+            const atomicOffset = randomInteger(1);
+            let destination = [x, y];
+          const trajectoryToOrientation = {
+            '0': {
+              '-1': 'W',
+              '1': 'E'
+            },
+            '1': {
+              '-1': 'S',
+              '1': 'N'
+            }
+          };
+            if (offDest[atomicOffset] !== 0) {
+              destination[atomicOffset] = offDest[atomicOffset] + Math.sign(offDest[atomicOffset]) * -1;
+            } else if (offDest[(atomicOffset + 1) % 2] !== 0) {
+              // shift in the other dimension
+              destination[(atomicOffset+1)%2] = offDest[(atomicOffset+1)%2] + Math.sign(offDest[(atomicOffset+1)%2]) * -1;
+            } else {
+              return [seaDestination.x, seaDestination.y];
+            }
+          updateCoordinates(terrain)(...destination)({
+            sprite: 'river-',
+            type: 'river'
+          });
+        })([xCenter, yCenter]);
+    }
 };
 
 const drawRiversByHeight = terrain => coords => {
