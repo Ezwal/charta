@@ -27,13 +27,12 @@ const seaRenderering = diamond => {
 
 const mountainRendering = terrain => diamond => {
     if (Math.random() < CONF.RIVER_SPAWN_RATE) {
-        console.log('river spawn chance !');
-        drawRivers(terrain)(diamond.x, diamond.y);
+        drawRiversByHeightAlt(terrain)(diamond.x, diamond.y);
     }
     return 'small_mountain.png';
 };
 
-const sortByInverseElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinates(terrain)(ax, ay) < getCoordinates(terrain)(bx, by));
+const sortByElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinates(terrain)(ax, ay) < getCoordinates(terrain)(bx, by));
 // given terrain will looks for local maximum and will give it a random change of spawning a river
 // ATM there is no such thing as directionality maybe later
 const possibleTrajectory = [[1, 0, 'W'], [0, 1, 'S'], [-1, 0, 'E'], [0, -1, 'N']];
@@ -78,44 +77,30 @@ const drawRivers = terrain => (x, y) => {
     }, [x, y]);
 };
 
-const drawRiversSecond = terrain => (xCenter, yCenter) => {
-    const terrainSquare = getSpaceArray([x-10, y+10], [y-10, y+10])
-          .map(([x, y]) => ({x, y, ...getCoordinates()}));
-    const allSeaAround = R.filter(R.propEq('type', 'sea'), terrainSquare);
-    if (allSeaAround.length !== 0) {
-        const seaDestination = allSeaAround[randomInteger(allSeaAround.length)];
-        R.until(R.equals(R.__, [seaDestination.x, seaDestination.y]), ([x, y]) => {
-            const offDest = [seaDestination.x - x, seaDestination.y - y];
-            const atomicOffset = randomInteger(1);
-            let destination = [x, y];
-          const trajectoryToOrientation = {
-            '0': {
-              '-1': 'W',
-              '1': 'E'
-            },
-            '1': {
-              '-1': 'S',
-              '1': 'N'
-            }
-          };
-            if (offDest[atomicOffset] !== 0) {
-              destination[atomicOffset] = offDest[atomicOffset] + Math.sign(offDest[atomicOffset]) * -1;
-            } else if (offDest[(atomicOffset + 1) % 2] !== 0) {
-              // shift in the other dimension
-              destination[(atomicOffset+1)%2] = offDest[(atomicOffset+1)%2] + Math.sign(offDest[(atomicOffset+1)%2]) * -1;
-            } else {
-              return [seaDestination.x, seaDestination.y];
-            }
-          updateCoordinates(terrain)(...destination)({
-            sprite: 'river-',
+const drawRiversByHeightAlt = terrain => (x,y) => {
+    // getting coordinates around diamond and sorting by increasing elevation
+    const customElevationSorting = (a, b) => {
+        let ta = getCoordinates(terrain)(...a);
+        let tb = getCoordinates(terrain)(...b);
+        return ta && tb ? ta.elevation - tb.elevation : 0;
+    };
+    const nearLowestCoordinates = R.head(R.sort(customElevationSorting,
+                              getCardinalArray(x, y)));
+
+    console.log('lowestTerrain', nearLowestCoordinates);
+    const nearLowestTerrain = getCoordinates(terrain)(...nearLowestCoordinates);
+    if (nearLowestTerrain && nearLowestTerrain.type !== 'river' && nearLowestTerrain.type !== 'sea') {
+        updateCoordinates(terrain)(...nearLowestCoordinates)({
+            sprite: `river-turbulent.png`,
             type: 'river'
-          });
-        })([xCenter, yCenter]);
+        });
+        drawRiversByHeightAlt(terrain)(...nearLowestCoordinates);
     }
 };
 
+
 const drawRiversByHeight = terrain => coords => {
-    const lowestHeightCoords = R.head(R.sort(sortByInverseElevation, coords
+    const lowestHeightCoords = R.head(R.sort(sortByElevation, coords
                                              .filter(([x, y]) => getCoordinates(terrain)(x, y))));
     const lowestHeight = getCoordinates(terrain)(...lowestHeightCoords);
     if (lowestHeight && lowestHeight.type !== 'river' && lowestHeight.type !== 'sea') {
@@ -155,8 +140,8 @@ const mutateTile = terrain => (x, y) => R
       .cond([
           [isCenterType('sand'), beachRendering],
           [isCenterType('clear_grass'), grassRendering],
-          [isCenterType('sea'), seaRenderering],
           [isCenterType('small_mountain'), diamond => mountainRendering(terrain)(diamond)],
+          [isCenterType('sea'), seaRenderering],
           [isCenterType('sea'), R.always('snowy_mountain.png')],
           [R.T, () => `${diamondSelector(terrain)(x, y).center.type}.png`]
       ])({...diamondSelector(terrain)(x, y),
