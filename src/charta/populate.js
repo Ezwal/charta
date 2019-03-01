@@ -1,5 +1,6 @@
 'use strict';
 
+// RENDERING PART - SPRITE MANAGEMENT
 const isCenterType = type => diamond => R.equals(diamond.center.type, type);
 const typeAround = type => diamond => R.filter(
     el => el && el.type === type,
@@ -26,23 +27,21 @@ const seaRenderering = diamond => {
         : 'sea.png';
 };
 
+// MOUTAIN SPECIFIC RENDERING
+
 const mountainRendering = terrain => diamond => {
     if (Math.random() < CONF.RIVER_SPAWN_RATE) {
-        drawRiversByHeightAlt(terrain)(diamond.x, diamond.y);
+        drawRiversByHeight(terrain)(diamond.x, diamond.y);
     }
     return 'small_mountain.png';
 };
 
-const sortByElevation = R.comparator(([ax, ay], [bx, by]) => getCoordinates(terrain)(ax, ay) < getCoordinates(terrain)(bx, by));
-// given terrain will looks for local maximum and will give it a random change of spawning a river
-// ATM there is no such thing as directionality maybe later
-const possibleTrajectory = [[1, 0, 'W'], [0, 1, 'S'], [-1, 0, 'E'], [0, -1, 'N']];
+// RIVER SPECIFIC RENDERING
 
-const drawRiversByHeightAlt = terrain => (x,y) => {
+const drawRiversByHeight = terrain => (x,y) => {
     // getting coordinates around diamond and sorting by increasing elevation
     const customElevationSorting = (a, b) => {
-        let ta = getCoordinates(terrain)(...a);
-        let tb = getCoordinates(terrain)(...b);
+        const [ta, tb] = [getCoordinates(terrain)(...a), getCoordinates(terrain)(...b)];
         return ta && tb ? ta.elevation - tb.elevation : 0;
     };
     const nearLowestCoordinates = R.head(R.sort(customElevationSorting,
@@ -51,24 +50,10 @@ const drawRiversByHeightAlt = terrain => (x,y) => {
     const nearLowestTerrain = getCoordinates(terrain)(...nearLowestCoordinates);
     if (nearLowestTerrain && nearLowestTerrain.type !== RIVER && nearLowestTerrain.type !== SEA) {
         updateCoordinates(terrain)(...nearLowestCoordinates)({
-            sprite: `river-turbulent.png`, // TODO fix
+            sprite: 'river-turbulent.png', // TODO fix
             type: RIVER
         });
-        drawRiversByHeightAlt(terrain)(...nearLowestCoordinates);
-    }
-};
-
-
-const drawRiversByHeight = terrain => coords => {
-    const lowestHeightCoords = R.head(R.sort(sortByElevation, coords
-                                             .filter(([x, y]) => getCoordinates(terrain)(x, y))));
-    const lowestHeight = getCoordinates(terrain)(...lowestHeightCoords);
-    if (lowestHeight && lowestHeight.type !== 'river' && lowestHeight.type !== 'sea') {
-        updateCoordinates(terrain)(...lowestHeightCoords)({
-            sprite: 'river-WE.png',
-            type: RIVER
-        });
-        drawRiversByHeight(terrain)(getCardinalArray(...lowestHeightCoords));
+        drawRiversByHeight(terrain)(...nearLowestCoordinates);
     }
 };
 
