@@ -16,10 +16,16 @@ const hasCoordinates = terrain => (x, y) => terrain.has(hashKey(x, y));
 const setCoordinates = terrain => (x, y) => newValue => terrain.set(hashKey(x, y), newValue);
 const updateCoordinates = terrain => (x, y) => newValues => setCoordinates(terrain)(x, y)(R.merge(getCoordinates(terrain)(x, y), newValues));
 
-const noiseToType = (x, y) => ({
-    type: typeSelector()(perlin2d(x / CONF.CHAOS_FACTOR , y / CONF.CHAOS_FACTOR)),
-    elevation: perlin2d(x / CONF.CHAOS_FACTOR, y / CONF.CHAOS_FACTOR)
+const basicGeneration = (x, y) => ({
+    type: typeSelector(perlin2d(x / CONF.CHAOS_FACTOR , y / CONF.CHAOS_FACTOR)),
+    elevation: perlin2d(x / CONF.CHAOS_FACTOR, y / CONF.CHAOS_FACTOR),
+    climate: climateGeneration(x, y),
 });
+
+// per centage
+
+const propX = x => x / NB_X_TILE;
+const propY = y => y / NB_Y_TILE;
 
 // gives 2d array of all combination of coordnates
 const getSpaceArray = ([wi, wf], [hi, hf]) => R.xprod(R.range(wi, wf), R.range(hi, hf));
@@ -38,10 +44,10 @@ const diamondSelector = terrain => (x, y) => R.zipObj(
 const randomCoordinates = terrain => () => [NB_X_TILE, NB_Y_TILE].map(randomInteger);
 
 // Given coordinates and noiseGenerator return texture sprite tile name for this terrain
-const typeSelector = () => R
+const typeSelector = R
       .cond([
-          [el => el < -0.7 , R.always('deep_sea')],
-          [el => el < 0 , R.always('sea')],
+          [el => el < -0.7, R.always('deep_sea')],
+          [el => el < 0, R.always('sea')],
           [el => el > 0 && el < 0.05, R.always('sand')],
           [el => el > 0.6 && el < 0.8, R.always('hill')],
           [el => el > 0.8 && el < 0.92, R.always('small_mountain')],
@@ -58,8 +64,6 @@ const populateTerrainObject = terrain => (w, h) => R.forEach(
 // Given size return a 3D data set representing the terrain
 const generateTerrainObject = (w, h) => R.reduce(
     (acc, [x, y]) =>
-        acc.set(hashKey(x, y), noiseToType(x, y))
+        acc.set(hashKey(x, y), basicGeneration(x, y))
     , new Map(),
     getSpaceArray([0, w], [0, h]));
-
-const generateTerrain = generateTerrainObject;
