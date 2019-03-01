@@ -6,6 +6,8 @@ const perlin2d =  noise.simplex2;
 const randomInteger = el => Math.floor(Math.random() * el);
 const randomIntegerBetween = (low, high) => low + randomInteger(high - low + 1);
 
+const [HIGH_MOUNTAIN, SMALL_MOUNTAIN, HILL, RIVER, VEGETATION, GROUND, COAST, CLIFF, SEA, DEEP_SEA] = R.range(0, 15);
+
 //////////////////////
 // HELPER FUNCTIONS //
 //////////////////////
@@ -46,13 +48,13 @@ const randomCoordinates = terrain => () => [NB_X_TILE, NB_Y_TILE].map(randomInte
 // Given coordinates and noiseGenerator return texture sprite tile name for this terrain
 const typeSelector = R
       .cond([
-          [el => el < -0.7, R.always('deep_sea')],
-          [el => el < 0, R.always('sea')],
-          [el => el > 0 && el < 0.05, R.always('sand')],
-          [el => el > 0.6 && el < 0.8, R.always('hill')],
-          [el => el > 0.8 && el < 0.92, R.always('small_mountain')],
-          [el => el > 0.92, R.always('snowy_mountain')],
-          [R.T, R.always('clear_grass')]
+          [el => el < -0.7, R.always(DEEP_SEA)],
+          [el => el < 0, R.always(SEA)],
+          [el => el > 0 && el < 0.05, R.always(COAST)],
+          [el => el > 0.6 && el < 0.8, R.always(HILL)],
+          [el => el > 0.8 && el < 0.92, R.always(SMALL_MOUNTAIN)],
+          [el => el > 0.92, R.always(HIGH_MOUNTAIN)],
+          [R.T, R.always(GROUND)]
       ]);
 
 const populateTerrainObject = terrain => (w, h) => R.forEach(
@@ -67,3 +69,4 @@ const generateTerrainObject = (w, h) => R.reduce(
         acc.set(hashKey(x, y), basicGeneration(x, y))
     , new Map(),
     getSpaceArray([0, w], [0, h]));
+
