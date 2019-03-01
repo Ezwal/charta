@@ -12,10 +12,13 @@ const beachRendering = diamond => {
     return `sand${orientation.length === 0 ? '' : '-'}${orientation}.png`;
 };
 
-const grassRendering = diamond => {
+const groundRendering = diamond => {
     const sandAround = typeAround(COAST)(diamond);
+    const climate = diamond.center.climate;
     return R.keysIn(sandAround).length > 1 ?
         `clear_grass_sand-${R.keysIn(sandAround).join('')}.png`
+        : climate === ARTIC ? 'tundra.png'
+        : climate === ARID ? 'desert.png'
         : 'clear_grass.png';
 };
 
@@ -30,10 +33,11 @@ const seaRenderering = diamond => {
 // MOUTAIN SPECIFIC RENDERING
 
 const mountainRendering = terrain => diamond => {
+    const climate = diamond.center.climate;
     if (Math.random() < CONF.RIVER_SPAWN_RATE) {
         drawRiversByHeight(terrain)(diamond.x, diamond.y);
     }
-    return 'small_mountain.png';
+    return getStandardClimateSprite(diamond.center.climate, 'small_mountain.png');
 };
 
 // RIVER SPECIFIC RENDERING
@@ -63,13 +67,14 @@ const propagateForest = terrain => (x, y) => likelihood => R.zip(
     R.times(Math.random, 8).map(el => el < likelihood),
     getSpaceArray([x-1, x+2], [y-1, y+2]))
       .map(([propagation, [tx, ty]]) => {
-    if (propagation && getCoordinates(terrain)(tx, ty) && getCoordinates(terrain)(tx, ty).type === GROUND) {
-        updateCoordinates(terrain)(tx, ty)({
-            sprite: 'forest.png',
-            type: VEGETATION
-        });
-        propagateForest(terrain)(tx, ty)(likelihood/2);
-    }
+          const center = getCoordinates(terrain)(tx, ty);
+          if (propagation && center && center.type === GROUND) {
+              updateCoordinates(terrain)(tx, ty)({
+                  sprite: getStandardClimateSprite(center.climate, 'forest.png'),
+                  type: VEGETATION,
+              });
+              propagateForest(terrain)(tx, ty)(likelihood/2);
+          }
 });
 
 // Given a probability 0 < P < 1 will mutate terrain to add forest thicket
@@ -84,11 +89,11 @@ const drawForests = terrain => likelihood => R
 const mutateTile = terrain => (x, y) => R
       .cond([
           [isCenterType(COAST), beachRendering],
-          [isCenterType(GROUND), grassRendering],
+          [isCenterType(GROUND), groundRendering],
           [isCenterType(SMALL_MOUNTAIN), diamond => mountainRendering(terrain)(diamond)],
           [isCenterType(SEA), seaRenderering],
           [isCenterType(HIGH_MOUNTAIN), () => 'snowy_mountain.png'],
-          [isCenterType(HILL), () => 'hill.png'],
+          [isCenterType(HILL), diamond => getStandardClimateSprite(diamond.center.climate, 'hill.png')],
           [isCenterType(DEEP_SEA), () => 'deep_sea.png'],
           // [isCenterType(SEA), R.always('snowy_mountain.png')],
       ])({...diamondSelector(terrain)(x, y),
