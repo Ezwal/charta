@@ -20,7 +20,8 @@ const grassRendering = diamond => {
 
 const seaRenderering = diamond => {
     const grassAround = R.keysIn(typeAround('clear_grass')(diamond));
-    return grassAround.length < 3 && grassAround.length > 0
+    const riverAround = R.keysIn(typeAround('river')(diamond));
+    return grassAround.length < 3 && grassAround.length > 0 && riverAround.length === 0
         ? `cliff-${grassAround.join('')}.png`
         : 'sea.png';
 };
@@ -87,11 +88,10 @@ const drawRiversByHeightAlt = terrain => (x,y) => {
     const nearLowestCoordinates = R.head(R.sort(customElevationSorting,
                               getCardinalArray(x, y)));
 
-    console.log('lowestTerrain', nearLowestCoordinates);
     const nearLowestTerrain = getCoordinates(terrain)(...nearLowestCoordinates);
     if (nearLowestTerrain && nearLowestTerrain.type !== 'river' && nearLowestTerrain.type !== 'sea') {
         updateCoordinates(terrain)(...nearLowestCoordinates)({
-            sprite: `river-turbulent.png`,
+            sprite: `river-turbulent.png`, // TODO fix
             type: 'river'
         });
         drawRiversByHeightAlt(terrain)(...nearLowestCoordinates);
