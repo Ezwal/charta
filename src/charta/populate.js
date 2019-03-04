@@ -6,6 +6,9 @@ const typeAround = type => diamond => R.filter(
     el => el && el.type === type,
     R.pick(['N', 'S', 'E', 'W'], diamond));
 
+// Those will construct the suitable sprite for the described location
+const getSpriteOrientation = name => orientation => console.log('TODO');
+
 const beachRendering = diamond => {
     const filtered = typeAround(GROUND)(diamond);
     const orientation = R.keysIn(filtered).join('');
@@ -14,12 +17,9 @@ const beachRendering = diamond => {
 
 const groundRendering = diamond => {
     const sandAround = typeAround(COAST)(diamond);
-    const climate = diamond.center.climate;
     return R.keysIn(sandAround).length > 1 ?
         `clear_grass_sand-${R.keysIn(sandAround).join('')}.png`
-        : climate === ARTIC ? 'tundra.png'
-        : climate === ARID ? 'desert.png'
-        : 'clear_grass.png';
+        : getSpriteClimateVariation('ground.png')(diamond.center.climate);
 };
 
 const seaRenderering = diamond => {
@@ -33,11 +33,10 @@ const seaRenderering = diamond => {
 // MOUTAIN SPECIFIC RENDERING
 
 const mountainRendering = terrain => diamond => {
-    const climate = diamond.center.climate;
     if (Math.random() < CONF.RIVER_SPAWN_RATE) {
         drawRiversByHeight(terrain)(diamond.x, diamond.y);
     }
-    return getStandardClimateSprite(diamond.center.climate, 'small_mountain.png');
+    return getSpriteClimateVariation('small_mountain.png')(diamond.center.climate);
 };
 
 // RIVER SPECIFIC RENDERING
@@ -70,7 +69,7 @@ const propagateForest = terrain => (x, y) => likelihood => R.zip(
           const center = getCoordinates(terrain)(tx, ty);
           if (propagation && center && center.type === GROUND) {
               updateCoordinates(terrain)(tx, ty)({
-                  sprite: getStandardClimateSprite(center.climate, 'forest.png'),
+                  sprite: getSpriteClimateVariation('forest.png')(center.climate),
                   type: VEGETATION,
               });
               propagateForest(terrain)(tx, ty)(likelihood/2);
@@ -93,7 +92,7 @@ const mutateTile = terrain => (x, y) => R
           [isCenterType(SMALL_MOUNTAIN), diamond => mountainRendering(terrain)(diamond)],
           [isCenterType(SEA), seaRenderering],
           [isCenterType(HIGH_MOUNTAIN), () => 'snowy_mountain.png'],
-          [isCenterType(HILL), diamond => getStandardClimateSprite(diamond.center.climate, 'hill.png')],
+          [isCenterType(HILL), diamond => getSpriteClimateVariation('hill.png')(diamond.center.climate)],
           [isCenterType(DEEP_SEA), () => 'deep_sea.png'],
           // [isCenterType(SEA), R.always('snowy_mountain.png')],
       ])({...diamondSelector(terrain)(x, y),

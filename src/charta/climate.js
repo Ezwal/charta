@@ -2,8 +2,8 @@
 
 const [ARTIC, TEMPERATE, ARID] = ['artic', 'temperate', 'arid'];
 
-const getStandardClimateSprite = (climate, name) => `${climate === ARTIC ?
-      'artic-' : climate === ARID ? 'arid-' : ''}${name}`;
+const getSpriteClimateVariation = name => climate =>
+      `${climate === ARTIC ? 'artic-' : climate === ARID ? 'arid-' : ''}${name}`;
 
 // evaluate condition for the specific tile it is asked for
 // may evoluate in the future
