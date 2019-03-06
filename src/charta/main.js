@@ -6,7 +6,7 @@ let terrain;
 const APP_WIDTH = window.innerWidth;
 const APP_HEIGHT = window.innerHeight;
 
-const normalizeCoordinates = el => Math.floor(el / CONF.TILE_SIZE);
+const normalizeCoordinates = el => Math.floor(el / CONF.TILE_SIZE) + 1;
 const [NB_X_TILE, NB_Y_TILE] = [APP_WIDTH, APP_HEIGHT].map(normalizeCoordinates);
 
 // given an object descrybing the terrain and the width and height to be drawn,

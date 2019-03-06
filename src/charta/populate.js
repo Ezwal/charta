@@ -53,7 +53,7 @@ const drawRiversByHeight = terrain => (x,y) => {
     const nearLowestTerrain = getCoordinates(terrain)(...nearLowestCoordinates);
     if (nearLowestTerrain && nearLowestTerrain.type !== RIVER && nearLowestTerrain.type !== SEA) {
         updateCoordinates(terrain)(...nearLowestCoordinates)({
-            sprite: 'river-turbulent.png', // TODO fix
+            sprite: 'river-turbulent.png',
             type: RIVER
         });
         drawRiversByHeight(terrain)(...nearLowestCoordinates);
@@ -91,10 +91,9 @@ const mutateTile = terrain => (x, y) => R
           [isCenterType(GROUND), groundRendering],
           [isCenterType(SMALL_MOUNTAIN), diamond => mountainRendering(terrain)(diamond)],
           [isCenterType(SEA), seaRenderering],
-          [isCenterType(HIGH_MOUNTAIN), () => 'snowy_mountain.png'],
+          [isCenterType(HIGH_MOUNTAIN), R.always('snowy_mountain.png')],
           [isCenterType(HILL), diamond => getSpriteClimateVariation('hill.png')(diamond.center.climate)],
-          [isCenterType(DEEP_SEA), () => 'deep_sea.png'],
-          // [isCenterType(SEA), R.always('snowy_mountain.png')],
+          [isCenterType(DEEP_SEA), R.always('deep_sea.png')],
       ])({...diamondSelector(terrain)(x, y),
           // it is dirty I know I should find a real way to put those coordinates
           // but since I'm lazy and I dont want to refactor this code again I will not do it right now
